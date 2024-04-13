@@ -78,6 +78,9 @@ def createProject(request):
    }
    return render(request, 'projects/create.html', context)
 
+def home(request):
+    return render(request, "projects/home.html",
+                  status=200) 
 
 
 
