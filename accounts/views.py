@@ -1,9 +1,11 @@
 from django.contrib.auth import login
 from django.shortcuts import render, redirect, reverse
-from accounts.forms import  RegisterationForm
+from django.http import HttpResponseRedirect
+from django.contrib import messages
+from accounts.forms import  RegisterationForm,ProfileUpdateForm,PasswordVerificationForm
 from accounts.models import Profile
-# Create your views here.
 
+# Create your views here.
 
 def profile_view(request):
     current_user = request.user
@@ -15,20 +17,64 @@ def profile_view(request):
     profile = current_user.profile
     phone = profile.mobile_phone
     profile_picture = profile.profile_picture
+    birthdate = profile.birthdate
+    facebook_profile = profile.facebook_profile
+    country = profile.country
         
     context = {
         'userData': {
-            'user_id':user_id,
+            'user_id': user_id,
             'username': user_name,
             'first_name': first_name,
             'last_name': last_name,
             'email': email,
             'phone': phone,
             'profile_picture': profile_picture,
+            'birthdate': birthdate,
+            'facebook_profile': facebook_profile,
+            'country': country,
         }
     }
 
     return render(request, 'accounts/profile.html', context)
+
+
+
+def update_profile(request):
+    current_user = request.user
+    profile = current_user.profile
+
+    if request.method == 'POST':
+        form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('account.profile'))
+    else:
+        form = ProfileUpdateForm(instance=profile)
+
+    context = {
+        'form': form,
+    }
+
+    return render(request, 'accounts/update_profile.html', context)
+
+
+
+def delete_account(request):
+    if request.method == 'POST':
+        password_form = PasswordVerificationForm(request.POST)
+        if password_form.is_valid():
+            # Verify the user's password
+            user = request.user
+            password = password_form.cleaned_data.get('password')
+            if user.check_password(password):
+                user.delete()
+                return redirect('login')
+            else:
+                messages.error(request, 'Incorrect password. Please try again.')
+    else:
+        password_form = PasswordVerificationForm()
+    return render(request, 'accounts/delete_account_confirm.html', {'password_form': password_form})
 
 
 def create_user(request):

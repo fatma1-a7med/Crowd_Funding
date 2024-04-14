@@ -1,3 +1,4 @@
+<!-- profile.html -->
 {% extends 'layouts/base.html' %}
 {% load static %}
 
@@ -24,8 +25,8 @@
                     </div>
                 </div>
                 <div class="col-md-2 my-5">
-                    <a style="background-color:#4F4557; border:2px solid white; color: whitesmoke;" class="btn my-2" href="#" name="btnAddMore">Edit Profile</a>
-                    <a class="btn btn-secondary my-2" href="#" name="btnAddMore">Change Password</a>
+                    <a style="background-color:#4F4557; border:2px solid white; color: whitesmoke;" class="btn my-2" href="{% url 'account.profile.update' %}" name="btnAddMore">Edit Profile</a>
+                    <a class="btn btn-danger my-2" href="{% url 'account.delete' %}" name="btnAddMore">Delete Account</a>
                 </div>
             </div>
             <div class="row">
@@ -58,6 +59,36 @@
                                     <p>{{ userData.phone }}</p>
                                 </div>
                             </div>
+                            {% if userData.birthdate %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Birthdate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.birthdate }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if userData.facebook_profile %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Facebook Profile</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.facebook_profile }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if userData.country %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.country }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>
