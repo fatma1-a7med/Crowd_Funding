@@ -1,3 +1,4 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +14,7 @@
             background-color: #4F4557;
         }
         .home_section {
-            background-image: url('./2204_w037_n003_329b_p1_329.jpg');
+            background-image: url('{% static 'accounts/images/background2.jpg' %}'); 
             background-size: cover;
             background-repeat: no-repeat;
             height: 90vh;
@@ -50,7 +51,7 @@
 <body>
 <nav class="navbar navbar-expand-lg ">
     <div class="container-fluid">
-        <a class="navbar-brand"> <img src="./logo2.svg" width="50" height="50">
+        <a class="navbar-brand"> <img src="{% static 'accounts/images/logo.svg' %}" width="50" height="50">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarScroll" aria-controls="navbarScroll" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>

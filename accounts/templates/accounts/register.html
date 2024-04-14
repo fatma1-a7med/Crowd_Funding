@@ -6,9 +6,6 @@
     .registration, .leftSide{
         height:100vh;
     }
-    .leftSide{
-        padding-left:2rem;
-    }
     .rightSide{
         background-image: url('{% static 'accounts/images/background.jpg' %}'); 
         background-size: cover;
@@ -16,46 +13,18 @@
        }
        .form-group {
         display: flex;
+        flex-direction: row;
         align-items: center;
-        width:40vw;
         justify-content: space-between;
-        margin-top:1rem;
     }
 
 </style>
-<div class="d-flex w-100 text-dark bg-light registration">
+<div class="d-flex w-100 bg-dark text-light registration">
     <div class="leftSide col-6">
         <h2>Register </h2>
         <form method="post"  enctype="multipart/form-data">
             {% csrf_token %}
-            <div class="form-group">
-                {{ form.first_name.label_tag }}
-                {{ form.first_name }}
-            </div>
-            <div class="form-group">
-                {{ form.last_name.label_tag }}
-                {{ form.last_name }}
-            </div>
-            <div class="form-group">
-                {{ form.email.label_tag }}
-                {{ form.email }}
-            </div>
-            <div class="form-group">
-                {{ form.password1.label_tag }}
-                {{ form.password1 }}
-            </div>
-            <div class="form-group">
-                {{ form.password2.label_tag }}
-                {{ form.password2 }}
-            </div>
-            <div class="form-group">
-                {{ form.mobile_phone.label_tag }}
-                {{ form.mobile_phone }}
-            </div>
-            <div class="form-group">
-                {{ form.profile_picture.label_tag }}
-                {{ form.profile_picture }}
-            </div>
+                {{form }}
         
             <input type="submit" class="btn btn-success">
         </form>
