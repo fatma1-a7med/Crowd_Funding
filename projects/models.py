@@ -1,4 +1,5 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
+from django.contrib.auth.models import User
 from django.db import models
 from django.utils import timezone
 from datetime import datetime
@@ -11,6 +12,7 @@ class Category(models.Model):
 
 
 class Project(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     project_title = models.CharField(max_length=40)
     project_details = models.TextField(default='')
     total_target = models.IntegerField()
@@ -46,6 +48,7 @@ class Rate(models.Model):
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
 
 class Donation(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     amount = models.IntegerField()
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,0 +1,39 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="card cafe-background"> <!-- Added custom class 'cafe-background' -->
+        <div class="card-body" >
+            <h1>User Donations</h1>
+            <div class="row my-5">
+                  <div class="col-md-12">
+                    <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #4F4557;">
+                        <li class="nav-item" >
+                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'account.profile' %}" role="tab" aria-controls="home" aria-selected="true">About</a>
+                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'userProjects' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">projects</a>
+                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'user_donations' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">donations</a>
+                        </li>
+                    </ul>
+                  </div>
+                  </div>
+                  <div class="row">
+                {% for donation in donations %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="card-title"><strong>Donation ID: </strong>{{ donation.id }}</h5>
+                            </div>
+                            <div class="card-body">
+                                <p class="card-text"><strong>Amount: </strong>{{ donation.amount }}</p>
+                                <p class="card-text"><strong>Project: </strong> {{ donation.project_id.project_title }}</p>
+                                <p class="card-text"><strong>Date:</strong> {{ donation.created_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

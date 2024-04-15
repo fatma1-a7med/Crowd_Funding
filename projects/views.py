@@ -40,6 +40,7 @@ def save_project(request):
             return HttpResponse("Category not found", status=400)
 
         my_project = Project(
+            user=request.user,
             project_title=request.POST["project_title"],
             project_details=request.POST["project_description"],
             total_target=request.POST["project_total_target"],
@@ -91,14 +92,23 @@ def add_comment(request):
 
 
 def add_donation(request):
-    project = Project.objects.get(id=request.POST["id"])
-    # user = User.objects.get(id=request.session['id'])
-    is_donated = Donation.objects.filter( project_id=project)
-    if not is_donated:
-        Donation( project_id=project, amount=request.POST["amount"]).save()
-    else:
-        Donation.objects.filter(project_id=project).update(
-            amount=F("amount") + request.POST["amount"])
+    project_id = request.POST.get("id")
+    amount = request.POST.get("amount")
+    
+    if project_id and amount:
+        project = Project.objects.get(id=project_id)
+        user_id = request.user.id  # Fetching user ID from session
+        
+        # Check if the user has already donated to this project
+        donation = Donation.objects.filter(project_id=project, user_id=user_id).first()
+
+        if donation:
+            # If user has already donated, update the existing donation amount
+            donation.amount += int(amount)
+            donation.save()
+        else:
+            # If user hasn't donated yet, create a new donation record
+            Donation.objects.create(project_id=project, user_id=user_id, amount=int(amount))
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
@@ -132,3 +142,27 @@ def report_project(request):
         # user = User.objects.get(id=request.session["id"])
         ProjectReports(project_id=project).save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def user_projects(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        projects = Project.objects.filter(user=user)
+        return render(request, "projects/myprojects.html", {"projects": projects})
+    except User.DoesNotExist:
+        return HttpResponse("User does not exist", status=400)
+import logging
+
+def user_donations(request, user_id):
+    try:
+        user = User.objects.get(id=user_id)
+        donations = Donation.objects.filter(user=user)
+
+        for donation in donations:
+            print(f"Donation ID: {donation.id}, Amount: {donation.amount}, Project: {donation.project_id.project_title}, Date: {donation.created_at}")
+
+        return render(request, "projects/user_donations.html", {"donations": donations})
+    except User.DoesNotExist:
+        return HttpResponse("User does not exist", status=400)
+
+
+
