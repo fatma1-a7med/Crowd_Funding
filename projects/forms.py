@@ -11,7 +11,6 @@ class ProjectForm(forms.ModelForm):
 
 
 class ImageForm(forms.ModelForm):
-
-    class Meta:
-        model = Pictures
-        fields = ['img_url']
+        class Meta:
+            model = Pictures
+            fields = ['img_url']

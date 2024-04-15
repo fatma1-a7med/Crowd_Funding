@@ -1,86 +1,134 @@
-from django.shortcuts import render ,redirect ,reverse , get_object_or_404
-from .models import *
-from .forms  import ProjectForm,ImageForm
-from django.forms import modelformset_factory
-from django.db.models import Q , Avg , Sum
+from django.db import models
+from django.db.models import Sum, Count
+from django.http import HttpResponse
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+from django.core.files.storage import FileSystemStorage
+from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
-from taggit.models import Tag
-from django.http.response import HttpResponse
-from django.contrib.auth.decorators import login_required
-
-# Create your views here.
-
-# def showProject(request , id):
-#    project = Project.objects.get(id = id)
-#    relatedProjects = Project.objects.all().filter(category_id = project.category)
-#    projectpics = Pictures.objects.all().filter(project_id = id)
-#    rate = project.rate_set.all().aggregate(Avg("value"))["value__avg"]
-#    rate = rate if rate else 0
-#    rate = Decimal(rate).quantize(0,ROUND_HALF_UP)
-#    start_date = project.start_date
-#    end_date = project.end_date
-
-from django.shortcuts import get_object_or_404, render
-from django.utils import timezone
-from datetime import timedelta
-from django.db.models import Avg, Sum
-
-def showProject(request, id):
-    item = get_object_or_404(Project.objects.prefetch_related('projectpicture_set', 'rate_set', 'donation_set'), id=id)
-    pPics = item.projectpicture_set.all()
-    relatedProjects = Project.objects.filter(category=item.category).exclude(id=id).order_by('-created_at')[:4]
-    rate = item.rate_set.all().aggregate(Avg("value"))["value__avg"]
-    rate = rate if rate else 0
-    rate = Decimal(rate).quantize(Decimal('0.0'), rounding=ROUND_HALF_UP)
-    now = timezone.now()
-    start_date = item.start_date
-    end_date = item.end_date
-    donate = item.donation_set.all().aggregate(Sum("amount"))
-    context = {'pData': item,
-               'pPics': pPics,
-               'rate': rate,
-               'now': now,
-               'start_date': start_date,
-               'end_date': end_date,
-               'relatedProjs': relatedProjects,
-               'donations_amount': donate["amount__sum"] if donate["amount__sum"] else 0}
-    if request.user.is_authenticated:
-        user_rate = item.rate_set.filter(user=request.user.profile).first()
-        if user_rate:
-            context["user_rate"] = user_rate.value
-    return render(request, "projects/viewProject.html", context)
+from django.db.models import Q, Avg, Sum,F
+from .models import *
 
 
-def createProject(request):
-   ImageFormSet = modelformset_factory(Pictures, form=ImageForm, min_num=1, extra=3)
+def add_project(request):
+    # // if 'id' in request.session:
 
-   if request.method == 'POST':
-      form = ProjectForm(request.POST)
-      formset = ImageFormSet(request.POST, request.FILES, queryset=Pictures.objects.none())
-
-      if form.is_valid() and formset.is_valid():
-         new_project = form.save(commit=False)
-         new_project.save()
-         form.save_m2m()
-         for image_form in formset.cleaned_data:
-            if image_form:
-               image = image_form['img_url']
-               photo = Pictures(project=new_project, img_url=image)
-               photo.save()
-         return redirect(f'/projects/projectDetails/{new_project.id}')
-   else:
-      form = ProjectForm()
-      formset = ImageFormSet(queryset=Pictures.objects.none())
-
-   context = {
-      'form': form,
-      'formset': formset,
-   }
-   return render(request, 'projects/create.html', context)
+        return render(request,"user_projects/add_project.html", {"categories" : Category.objects.all()})
+     # else:
+     #    return  redirect('/login')
 
 
+def add_category(request):
+    if request.method == "POST":
+        Category(None,request.POST["name"]).save()
+        return redirect("/projects/add")
+
+
+def save_project(request):
+    if request.method == "POST":
+        try:
+            category_id = int(request.POST.get("project_category"))
+            category = Category.objects.get(id=category_id)
+        except (ValueError, Category.DoesNotExist):
+            # Handle invalid category ID or missing category
+            # You might want to return an error response or redirect to a different page
+            # For now, I'll just return a generic error response
+            return HttpResponse("Invalid category ID or category does not exist", status=400)
+
+        if category is None:
+            # Handle case where category is not found
+            return HttpResponse("Category not found", status=400)
+
+        my_project = Project(
+            project_title=request.POST["project_title"],
+            project_details=request.POST["project_description"],
+            total_target=request.POST["project_total_target"],
+            start_time=request.POST["project_start_date"],
+            end_time=request.POST["project_end_date"],
+            category=category
+        )
+        my_project.save()
+
+        # Saving project tags
+        for tag in request.POST.get("project_tags", "").split(","):
+            Tags.objects.create(project=my_project, tag_name=tag.strip())
+
+        # Saving project images
+        for _img in request.FILES.getlist('project_images[]'):
+            FileSystemStorage(location='/images')
+            Images(project_id=my_project, img=_img).save()
+
+        # Redirect to the project details page
+        return redirect(f"/projects/{my_project.id}")
+    else:
+        # Handle GET request (if applicable)
+        return render(request, "user_projects/add_project.html")
+
+
+def project_details(request, _id):
+    # if 'id' in request.session:
+    #     print('mwgooooookokokokokokokd')
+        project_data = Project.objects.get(id=_id)
+        project_category = Category.objects.get(id=project_data.category_id)
+        project = {"data": project_data, "category": project_category,
+                   "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
+                   "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
+                   "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
+
+        return render(request, "user_projects/sliderpase.html", project)
+
+    # else:
+        print('sssssssssss')
+        return redirect('/login')
+
+
+def add_comment(request):
+    if request.method == "POST":
+        project = Project.objects.get(id=request.POST["id"])
+        # user = User.objects.get(id=request.session['id'])
+        Comment(project_id=project, content=request.POST["content"]).save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def add_donation(request):
+    project = Project.objects.get(id=request.POST["id"])
+    # user = User.objects.get(id=request.session['id'])
+    is_donated = Donation.objects.filter( project_id=project)
+    if not is_donated:
+        Donation( project_id=project, amount=request.POST["amount"]).save()
+    else:
+        Donation.objects.filter(project_id=project).update(
+            amount=F("amount") + request.POST["amount"])
+
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def rate_project(request):
+    if request.method == "POST":
+        project = Project.objects.get(id=request.POST["id"])
+        #user = User.objects.get(id=request.session['id'])
+        is_rated = Rate.objects.filter(id=project)
+        if not is_rated:
+            Rate(id=project, rate=request.POST["rate"]).save()
+        else:
+            Rate.objects.filter(id=project).update(rate=request.POST["rate"])
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def report_comment(request):
+    if request.method == "POST":
+        print(request.POST, 'fffff')
+        comment = Comment.objects.get(id=request.POST["id"])
+        # user = User.objects.get(id=request.session["id"])
+        CommentReports(comment_id=comment).save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
-
-
+def report_project(request):
+    if request.method == "POST":
+        print(request.POST, "sssss")
+        project = Project.objects.get(id=request.POST["id"])
+        # user = User.objects.get(id=request.session["id"])
+        ProjectReports(project_id=project).save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
