@@ -19,14 +19,25 @@ from django.contrib import admin
 from django.urls import path ,include
 from django.conf.urls.static import static
 from django.conf import settings
+<<<<<<< HEAD
 from projects import views as projects
 
+=======
+from django.conf.urls.static import static
+>>>>>>> 92933ca6c6bbff07aa1e2222648e1660ecf9d5b2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('projects/', include('projects.urls')),
+<<<<<<< HEAD
     path('categories/add', projects.add_category),
 
 ] +static(settings.MEDIA_URL,document_root=settings.MEDIA_ROOT)
 
 
+=======
+    path('accounts/', include('django.contrib.auth.urls')),
+    path('accounts/', include('accounts.urls'))
+
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+>>>>>>> 92933ca6c6bbff07aa1e2222648e1660ecf9d5b2

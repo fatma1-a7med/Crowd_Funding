@@ -1,0 +1,99 @@
+<!-- profile.html -->
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <div class ="my-5">
+                        <img style="border-radius: 50%; width: 400px; height: 300px;" src="{{ userData.profile_picture.url }}" class="img-thumbnail" alt="profile pic"/>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="profile-head">
+                        <h5 class="my-5">{{ userData.first_name }}</h5>
+                        <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #4F4557;">
+                            <li class="nav-item" >
+                                <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">About</a>
+                                <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">projects</a>
+                                <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">donations</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-md-2 my-5">
+                    <a style="background-color:#4F4557; border:2px solid white; color: whitesmoke;" class="btn my-2" href="{% url 'account.profile.update' %}" name="btnAddMore">Edit Profile</a>
+                    <a class="btn btn-danger my-2" href="{% url 'account.delete' %}" name="btnAddMore">Delete Account</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                </div>
+                <div class="col-md-8">
+                    <div class="tab-content profile-tab" id="myTabContent">
+                        <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Name</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.first_name }} {{ userData.last_name }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Email</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.email }}</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Phone</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.phone }}</p>
+                                </div>
+                            </div>
+                            {% if userData.birthdate %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Birthdate</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.birthdate }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if userData.facebook_profile %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Facebook Profile</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.facebook_profile }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% if userData.country %}
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <label>Country</label>
+                                </div>
+                                <div class="col-md-6">
+                                    <p>{{ userData.country }}</p>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

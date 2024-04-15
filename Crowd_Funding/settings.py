@@ -70,9 +70,13 @@ ROOT_URLCONF = 'Crowd_Funding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
+<<<<<<< HEAD
          'DIRS': [
 
         ],
+=======
+        'DIRS': [BASE_DIR.joinpath('templates')],
+>>>>>>> 92933ca6c6bbff07aa1e2222648e1660ecf9d5b2
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,10 +97,10 @@ WSGI_APPLICATION = 'Crowd_Funding.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '3468',
         'HOST': 'localhost',
         'PORT':3306
 
@@ -147,5 +151,15 @@ MEDIA_ROOT = (
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+<<<<<<< HEAD
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TAGGIT_CASE_INSENSITIVE = True
+=======
+
+
+CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+import os
+MEDIA_URL = 'media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
+>>>>>>> 92933ca6c6bbff07aa1e2222648e1660ecf9d5b2

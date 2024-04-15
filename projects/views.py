@@ -10,13 +10,6 @@ from django.db.models import Q, Avg, Sum,F
 from .models import *
 
 
-def add_project(request):
-    # // if 'id' in request.session:
-
-        return render(request,"user_projects/add_project.html", {"categories" : Category.objects.all()})
-     # else:
-     #    return  redirect('/login')
-
 
 def add_category(request):
     if request.method == "POST":
