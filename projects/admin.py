@@ -10,6 +10,6 @@ admin.site.register(Rate)
 admin.site.register(CommentReports)
 admin.site.register(ProjectReports)
 
-admin.site.register(Category)
+# admin.site.register(Category)
 
 

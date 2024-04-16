@@ -1,5 +1,5 @@
 from django import  forms
-from .models import Project, Pictures
+from .models import Project, Images
 
 
 
@@ -12,5 +12,5 @@ class ProjectForm(forms.ModelForm):
 
 class ImageForm(forms.ModelForm):
         class Meta:
-            model = Pictures
+            model = Images
             fields = ['img_url']

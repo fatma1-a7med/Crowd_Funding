@@ -3,7 +3,7 @@
 
 <div class="container mt-3">
     <div class="row">
-        <form action="/categories/add" method="post" enctype="multipart/form-data">
+        {% comment %} <form action="/categories/add" method="post" enctype="multipart/form-data">
             {% csrf_token %}
             <div class="form-group">
                 <label>name</label>
@@ -22,7 +22,7 @@
                     class="form-control btn btn-outline-light btn-dark"
                     value="Add Category"
                 />
-        </form>
+        </form> {% endcomment %}
         <form
             action="/projects/save"
             method="post"
