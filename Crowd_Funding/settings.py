@@ -66,13 +66,12 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'Crowd_Funding.urls'
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'DIRS': [
-
-        ],
+        'DIRS': [BASE_DIR.joinpath('templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -93,10 +92,10 @@ WSGI_APPLICATION = 'Crowd_Funding.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'mysql.connector.django',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT':3306
 
@@ -150,3 +149,14 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TAGGIT_CASE_INSENSITIVE = True
 
+
+""" mail = os.environ.get("MAIL")
+mail_password = os.environ.get("PASSWORD") """
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST ="smtp.gmail.com" 
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = "fatmaalzahraa.ahmed.fathy@gmail.com"
+EMAIL_HOST_PASSWORD = "cwyx cxhs ttpy fjva"
+DEFAULT_FROM_EMAIL = "fatmaalzahraa.ahmed.fathy@gmail.com"
