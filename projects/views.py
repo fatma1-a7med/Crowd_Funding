@@ -107,11 +107,11 @@ def rate_project(request):
     if request.method == "POST":
         project = Project.objects.get(id=request.POST["id"])
         #user = User.objects.get(id=request.session['id'])
-        is_rated = Rate.objects.filter(id=project)
+        is_rated = Rate.objects.filter(project_id=project)
         if not is_rated:
-            Rate(id=project, rate=request.POST["rate"]).save()
+            Rate(project_id=project, rate=request.POST["rate"]).save()
         else:
-            Rate.objects.filter(id=project).update(rate=request.POST["rate"])
+            Rate.objects.filter(project_id=project).update(rate=request.POST["rate"])
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -127,8 +127,11 @@ def report_comment(request):
 
 def report_project(request):
     if request.method == "POST":
-        print(request.POST, "sssss")
+        # print(request.POST, "sssss")
         project = Project.objects.get(id=request.POST["id"])
         # user = User.objects.get(id=request.session["id"])
         ProjectReports(project_id=project).save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+
