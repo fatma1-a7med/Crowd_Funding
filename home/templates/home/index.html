@@ -1,0 +1,123 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+{% block title %}  
+<h2>Home page </h2>
+
+{% endblock %}
+{% block content %}
+
+{% if search_results %}
+    {% if category %}
+        <!-- Display category details -->
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="card">
+                        <img src="{{ category.logo_url }}" class="card-img-top" alt="Category Logo">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ category.name }}</h5>
+                            <p class="card-text">Description: {{ category.description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Display project in the category -->
+        <div class="container my-5">
+            <h1 class="text-center">project in this Category</h1>
+            <div class="row justify-content-center">
+                {% for project in search_results %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.project_details }}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ project.name }}</h5>
+                                <p class="card-text">Description: {{ project.description }}</p>
+                                <a href="{{ project.show_url }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% else %}
+        <!-- Display regular search results -->
+        <div class="container my-5">
+            <div class="row justify-content-center">
+                {% for project in search_results %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card">
+                            <img src="{{  project.image_url }}" class="card-img-top" alt="{{  project.project_title}}">
+                            <div class="card-body">
+                                <h5 class="card-title">{{ book.name }}</h5>
+                                <p class="card-text">Price: L.E{{ book.price }}</p>
+                                <a href="{{ book.show_url }}" class="btn btn-primary">View Details</a>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p class="text-center">No results found.</p>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
+{% else %}
+    <p class="text-center my-5">No results found.</p>
+{% endif %}
+
+
+
+
+{% comment %} latest added project {% endcomment %}
+<h2 class="my-5 text-dark text-center">New Projects</h2>
+<div class="container">
+    <div class="row row-cols-3 row-cols-md-3 g-4">
+        {% for project in projects %}
+            <div class="col">
+                <div class="card">
+                    <img src="{{ project.image_url }}" class="card-img-top img-fluid mx-auto d-block" style="max-width: 200px; max-height: 200px;" alt="{{ project.project_title }}">
+                    <div class="card-body text-center">
+                        <h5 class="card-title"> Project Title: {{ project.project_title }}</h5>
+                        <p class="card-text">Project Details: {{ project.project_details }}</p>
+                        <p class="card-text">Project Start: {{ project.start_time }}</p>
+                        <p class="card-text">Project End: {{ project.end_time }}</p>
+                        <p class="card-text">Project Target: {{ project.total_target }}</p>
+                        <p class="card-text">Project Category: {{ project.category.name }}</p>
+                         <p class="card-text">
+                            <h5>Project Tags:</h5>
+                             <br />
+                             <ul>
+                             {% for project in project.Tags.all %}
+                             <li>{{ project.tag_name }}</li>
+                              {% endfor %}
+                              </ul> 
+                        </p> 
+                        
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<h2 class="my-5 text-dark text-center">Most Important Project</h2>
+<div class="container">
+    <div class="row row-cols-3 row-cols-md-3 g-4">
+        {% for project in featured_projects %}
+            <div >
+                <div class="card">
+                    <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.name }}">
+                    <div class="card-body">
+                        <h5 class="card-title">Name: {{ project.project_title }}</h5>
+                        <p class="card-text">Details: {{ project.project_details }}</p>
+                        <a href="{{ project.show_url }}" class="btn btn-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+
+{% endblock %} 
