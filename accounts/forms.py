@@ -2,6 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from accounts.models import Profile
+from django.core.exceptions import ValidationError
 
 
 class RegisterationForm(UserCreationForm):
@@ -9,8 +10,14 @@ class RegisterationForm(UserCreationForm):
     profile_picture=forms.ImageField()
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email','password1','password2','mobile_phone','profile_picture')
-
+        fields = ('first_name', 'last_name','password1','password2','username', 'email','mobile_phone','profile_picture')
+    
+    def clean_email(self):
+        email=self.cleaned_data.get("email")
+        if User.objects.filter(email=email).exists():
+            raise ValidationError("An account with this email address already exists!!")
+        return email
+    
 class ProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
