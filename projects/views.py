@@ -8,6 +8,8 @@ from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from django.db.models import Q, Avg, Sum,F
 from .models import *
+from django.contrib.auth.decorators import login_required
+
 
 
 def add_project(request):
@@ -22,7 +24,6 @@ def add_category(request):
     if request.method == "POST":
         Category(None,request.POST["name"]).save()
         return redirect("/projects/add")
-
 
 def save_project(request):
     if request.method == "POST":
@@ -64,6 +65,12 @@ def save_project(request):
     else:
         # Handle GET request (if applicable)
         return render(request, "user_projects/add_project.html")
+
+
+def projects_index(request):
+    categories = Project.get_all_categories() 
+    return render(request, 'categories/index.html', {'categories': categories})
+
 
 
 def project_details(request, _id):
@@ -163,6 +170,21 @@ def user_donations(request, user_id):
         return render(request, "projects/user_donations.html", {"donations": donations})
     except User.DoesNotExist:
         return HttpResponse("User does not exist", status=400)
+
+
+
+
+
+def home(req):
+    heighest_rated_project = Rate.objects.order_by('-rate')[:5]
+
+
+
+
+
+
+
+
 
 
 

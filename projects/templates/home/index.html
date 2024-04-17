@@ -1,0 +1,36 @@
+{% extends 'layouts/base.html' %}
+{% load static %}
+
+{% block title %}
+   home page
+{% endblock %}
+
+{% block content %}
+<h2 class="my-5 text-dark text-center">The highest rated projects</h2>
+<div id="carouselExampleCaptions" class="carousel slide" data-bs-ride="carousel">
+    <div class="carousel-indicators">
+        {% for index in highest_priced_books %}
+            <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="{{ forloop.counter0 }}" {% if forloop.first %}class="active"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>
+        {% endfor %}
+    </div>
+    <div class="carousel-inner">
+        {% for book in highest_priced_books %}
+            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                <img src="{{ book.image_url }}" class="d-block mx-auto" style="height: 500px; width: 500px" alt="{{ book.name }}">
+                <div class="carousel-caption d-none d-md-block text-dark">
+                    <h5>{{ book.name }}</h5>
+                    <p>Price: {{ book.price }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+</div>

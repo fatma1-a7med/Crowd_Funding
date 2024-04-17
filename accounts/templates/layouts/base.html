@@ -62,8 +62,12 @@
                     <a class="nav-link active" aria-current="page" href="#">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">Projects</a>
+                    <a class="nav-link" href="{% url 'projectDetails' %}">Projects</a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'categories.index' %}">Categories</a>
+                </li> 
+
 
             </ul>
             <form class="d-flex mx-5">
