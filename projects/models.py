@@ -21,6 +21,7 @@ class Project(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
     project_show = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
+    is_reported = models.BooleanField(default=False)
 
     def __str__(self):
         return self.project_title
@@ -34,7 +35,8 @@ class Comment(models.Model):
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     content = models.TextField(max_length=2000)
     created_at = models.DateTimeField(auto_now_add=True)
-
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    is_reported = models.BooleanField(default=False)
 
 
 
@@ -46,6 +48,8 @@ class Rate(models.Model):
         MinValueValidator(1)
     ])
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
 
 class Donation(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -65,8 +69,14 @@ class Tags(models.Model):
 
 class CommentReports(models.Model):
     comment_id = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    # user_id = models.ForeignKey(User , on_delete = models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 class ProjectReports(models.Model):
         project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-        # user_id = models.ForeignKey(User, on_delete=models.CASCADE)
+        user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
+
+class ReplayComment (models.Model):
+    comment_id = models.ForeignKey(Comment , on_delete=models.CASCADE)
+    user = models.ForeignKey(User , on_delete=models.CASCADE)
+    comment_content = models.TextField(default=' ')

@@ -1,10 +1,9 @@
-
-
-
 {% extends 'user_projects/base.html' %}
-
+{% load static %}
 {% block content %}
+
 <div class="container">
+    {% if not project.is_reported %}
     <div class="row">
         <div class="col-md-8 offset-md-2">
             <div class="card mb-4">
@@ -60,25 +59,35 @@
                         </form>
                     </div>
                     <h3 class="m-4">Comments</h3>
-                  {% for comment in data.comment_set.all %}
-    <div class="card my-3">
-      <div class="card-body">
-        <h5 class="card-title">{{ comment.user.username }}</h5>
+                {% for comment in data.comment_set.all %}
+                 {% if not comment.is_reported %}
+                        <div class="card my-3">
+                          <div class="card-body">
+                              {% if comment.user.profile.profile_picture %}
+                              <img id="profile_picture" src="{{ comment.user.profile.profile_picture.url }}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+                              {% else %}
+                           <img id="profile_picture" src="{% static 'user_projects/images/profile1.jpg' %}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+
+                  {% endif %}
+
+        <h5 class="card-title">{{ comment.user.first_name}} {{comment.user.last_name}}</h5>
         <p class="card-text">{{ comment.content }}</p>
-        <form action="/comment/reply" method="post">
-          {% csrf_token %}
-          <input type="hidden" name="comment_id" value="{{ comment.id }}">
-          <input type="hidden" name="project_id" value="{{ data.id }}">
-          <textarea name="content" class="form-control" rows="3" required></textarea>
-          <button type="submit" class="btn btn-primary mt-2">Reply</button>
-        </form>
-      	     <form action="/projects/comment/report" method="POST">
-			{% csrf_token %}
- <input type="hidden" name="id" value="{{comment.id}}" />
-<button type="submit" class="btn btn-danger mt-4" >ReportComment</button>
-</form>
-      </div>
-    </div>
+                <form action="/comment/reply" method="post">
+                  {% csrf_token %}
+                  <input type="hidden" name="comment_id" value="{{ comment.id }}">
+                  <input type="hidden" name="project_id" value="{{ data.id }}">
+
+                  <textarea name="content" class="form-control" rows="3" required></textarea>
+                  <button type="submit" class="btn btn-primary mt-2">Reply</button>
+                </form>
+                     <form action="/projects/comment/report" method="POST">
+                    {% csrf_token %}
+                         <input type="hidden" name="id" value="{{comment.id}}" />
+                        <button type="submit" class="btn btn-danger mt-4" >ReportComment</button>
+                     </form>
+              </div>
+            </div>
+        {% endif %}
 {% endfor %}
 
                     <form action="/projects/comments/add" method="post">
@@ -93,13 +102,56 @@
 
                 </div>
 				<form action="/projects/project/report" method="POST">
-    {%csrf_token%}
-    <input type="hidden" name="id" value="{{data.id}}"/>
-    <button type="submit" class="btn btn-danger mt-2">ReportProject</button>
-</form>
+                  {%csrf_token%}
+                <input type="hidden" name="id" value="{{data.id}}"/>
+                <button type="submit" class="btn btn-danger mt-2">ReportProject</button>
+               </form>
 
             </div>
         </div>
     </div>
 </div>
+{% else %}
+<p>This project has been reported and is currently not available.</p>
+{% endif %}
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

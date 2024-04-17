@@ -13,7 +13,7 @@ urlpatterns =[
     path('comment/report', views.report_comment),
     path('user/<int:user_id>/projects', views.user_projects, name='userProjects'),
     path('donations/<int:user_id>/', views.user_donations, name='user_donations'),
-
+    path('some_error_page/', views.some_error_page, name='some_error_page')
 
 
 ]

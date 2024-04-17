@@ -30,13 +30,10 @@ def save_project(request):
             category_id = int(request.POST.get("project_category"))
             category = Category.objects.get(id=category_id)
         except (ValueError, Category.DoesNotExist):
-            # Handle invalid category ID or missing category
-            # You might want to return an error response or redirect to a different page
-            # For now, I'll just return a generic error response
+
             return HttpResponse("Invalid category ID or category does not exist", status=400)
 
         if category is None:
-            # Handle case where category is not found
             return HttpResponse("Category not found", status=400)
 
         my_project = Project(
@@ -66,28 +63,43 @@ def save_project(request):
         return render(request, "user_projects/add_project.html")
 
 
+# def project_details(request, _id):
+#     # if 'id' in request.session:
+#     #     print('mwgooooookokokokokokokd')
+#         project_data = Project.objects.get(id=_id)
+#         project_category = Category.objects.get(id=project_data.category_id)
+#         project = {"data": project_data, "category": project_category,
+#                    "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
+#                    "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
+#                    "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
+#
+#         return render(request, "user_projects/sliderpase.html", project)
+#
+#     # else:
+#         print('sssssssssss')
+#         return redirect('/login')
 def project_details(request, _id):
-    # if 'id' in request.session:
-    #     print('mwgooooookokokokokokokd')
-        project_data = Project.objects.get(id=_id)
-        project_category = Category.objects.get(id=project_data.category_id)
-        project = {"data": project_data, "category": project_category,
-                   "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
-                   "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
-                   "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
+    # Retrieve the project, but exclude reported projects
+    project_data = Project.objects.filter(id=_id, is_reported=False).first()
 
-        return render(request, "user_projects/sliderpase.html", project)
+    if project_data is None:
+        # Handle the case where the project does not exist or has been reported
+        return redirect('some_error_page')
 
-    # else:
-        print('sssssssssss')
-        return redirect('/login')
+    project_category = Category.objects.get(id=project_data.category_id)
+    project = {"data": project_data, "category": project_category,
+               "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
+               "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
+               "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
+
+    return render(request, "user_projects/sliderpase.html", project)
 
 
 def add_comment(request):
     if request.method == "POST":
         project = Project.objects.get(id=request.POST["id"])
-        # user = User.objects.get(id=request.session['id'])
-        Comment(project_id=project, content=request.POST["content"]).save()
+        user_id = request.user.id
+        Comment(user_id=user_id,project_id=project, content=request.POST["content"]).save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -116,12 +128,12 @@ def add_donation(request):
 def rate_project(request):
     if request.method == "POST":
         project = Project.objects.get(id=request.POST["id"])
-        #user = User.objects.get(id=request.session['id'])
-        is_rated = Rate.objects.filter(project_id=project)
+        user_id = request.user.id
+        is_rated = Rate.objects.filter(user_id=user_id,project_id=project)
         if not is_rated:
-            Rate(project_id=project, rate=request.POST["rate"]).save()
+            Rate(project_id=project,user_id=user_id, rate=request.POST["rate"]).save()
         else:
-            Rate.objects.filter(project_id=project).update(rate=request.POST["rate"])
+            Rate.objects.filter(user_id=user_id,project_id=project).update(rate=request.POST["rate"])
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -129,18 +141,22 @@ def report_comment(request):
     if request.method == "POST":
         print(request.POST, 'fffff')
         comment = Comment.objects.get(id=request.POST["id"])
-        # user = User.objects.get(id=request.session["id"])
-        CommentReports(comment_id=comment).save()
+        user_id = request.user.id
+        CommentReports(user_id=user_id,comment_id=comment).save()
+        comment.is_reported = True
+        comment.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
 
-def report_project(request):
+def report_project(request ):
     if request.method == "POST":
         # print(request.POST, "sssss")
         project = Project.objects.get(id=request.POST["id"])
-        # user = User.objects.get(id=request.session["id"])
-        ProjectReports(project_id=project).save()
+        user_id = request.user.id
+        ProjectReports(user_id = user_id, project_id=project).save()
+        project.is_reported = True
+        project.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -167,3 +183,5 @@ def user_donations(request, user_id):
 
 
 
+def some_error_page(request):
+    return render(request, 'error_page.html')

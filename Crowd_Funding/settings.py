@@ -70,9 +70,7 @@ ROOT_URLCONF = 'Crowd_Funding.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-         'DIRS': [
-
-        ],
+         'DIRS': [os.path.join(BASE_DIR, 'projects/templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -139,9 +137,6 @@ USE_TZ = True
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 MEDIA_URL = '/media/'
-MEDIA_ROOT = (
-    os.path.join(BASE_DIR, 'media')
-)
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -149,4 +144,6 @@ MEDIA_ROOT = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
 TAGGIT_CASE_INSENSITIVE = True
+
+
 
