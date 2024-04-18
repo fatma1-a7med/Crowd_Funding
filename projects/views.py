@@ -10,12 +10,17 @@ from django.db.models import Q, Avg, Sum,F
 from .models import *
 
 
-def add_project(request):
-    # // if 'id' in request.session:
 
-        return render(request,"user_projects/add_project.html", {"categories" : Category.objects.all()})
+
+def perojects_index(request):
+    projects = Project.get_all_projects()
+    return render(request,'user_projects/allprojects.html',
+                  context={'projects':projects})
+def add_project(request):
+     # if 'id' in request.session:
+      return render(request,"user_projects/add_project.html",{"categories" : Category.objects.all()})
      # else:
-     #    return  redirect('/login')
+     #   return  redirect('/login')
 
 
 def add_category(request):
@@ -83,7 +88,7 @@ def project_details(request, _id):
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
 
     if project_data is None:
-        # Handle the case where the project does not exist or has been reported
+
         return redirect('some_error_page')
 
     project_category = Category.objects.get(id=project_data.category_id)
@@ -185,3 +190,11 @@ def user_donations(request, user_id):
 
 def some_error_page(request):
     return render(request, 'error_page.html')
+
+
+
+def delete_project(request):
+    if request.method == "POST":
+        Project.objects.filter(id=request.POST["id"]).delete()
+        return HttpResponseRedirect("/projects/add")
+

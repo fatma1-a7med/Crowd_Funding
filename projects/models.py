@@ -24,6 +24,10 @@ class Project(models.Model):
     def __str__(self):
         return self.project_title
 
+    @staticmethod
+    def get_all_projects():
+        return Project.objects.all()
+
 
 class Images(models.Model):
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
