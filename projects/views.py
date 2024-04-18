@@ -198,3 +198,9 @@ def delete_project(request):
         Project.objects.filter(id=request.POST["id"]).delete()
         return HttpResponseRedirect("/projects/add")
 
+
+# def home(req):
+#     latest_project = Project.objects.order_by('-created_at')[:5]
+#     # print("Latest Projects:", latest_project)  # Add this line for debugging
+#     return render(req, 'index.html', context={'projects': latest_project})
+
