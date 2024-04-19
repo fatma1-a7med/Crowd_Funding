@@ -7,15 +7,12 @@ from categories.models import Category
 from django.shortcuts import reverse
 
 
-
 class Tags(models.Model):
-    # project = models.ForeignKey(Project, on_delete=models.CASCADE)
+
     tag_name = models.CharField(max_length=40)
 
     def __str__(self):
-        return f"{self.tag_name} for {self.project.project_title}"
-
-
+        return self.tag_name
 
 class Project(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
@@ -24,27 +21,19 @@ class Project(models.Model):
     total_target = models.IntegerField()
     start_time = models.DateTimeField(default=timezone.now)
     end_time = models.DateTimeField(default=timezone.now)
-    category =models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, related_name="allprojects")
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, null=True, blank=True, related_name="allprojects")
     project_show = models.BooleanField(default=False)
     created_at = models.DateTimeField(default=timezone.now)
-
     is_reported = models.BooleanField(default=False)
-
     featured = models.BooleanField(default=False)
     tags = models.ManyToManyField(Tags)
 
-
     def __str__(self):
         return self.project_title
-    
+
     @property
     def show_url(self):
         return reverse('projectDetails', args=[self.id])
-    
-
-    
-    
-
 
     @staticmethod
     def get_all_projects():
@@ -54,10 +43,10 @@ class Project(models.Model):
 class Images(models.Model):
     project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
     img = models.ImageField(upload_to="projects/img")
-    
+
     @property
     def image_url(self):
-        return f"/media/{self.image}" 
+        return f"/media/{self.image}"
 
 
 class Comment(models.Model):
@@ -66,9 +55,6 @@ class Comment(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     is_reported = models.BooleanField(default=False)
-
-
-
 
 
 class Rate(models.Model):
@@ -94,12 +80,13 @@ class CommentReports(models.Model):
     comment_id = models.ForeignKey(Comment, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
+
 class ProjectReports(models.Model):
-        project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
-        user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    project_id = models.ForeignKey(Project, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 
-class ReplayComment (models.Model):
-    comment_id = models.ForeignKey(Comment , on_delete=models.CASCADE)
-    user = models.ForeignKey(User , on_delete=models.CASCADE)
+class ReplayComment(models.Model):
+    comment_id = models.ForeignKey(Comment, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment_content = models.TextField(default=' ')

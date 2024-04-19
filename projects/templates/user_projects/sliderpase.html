@@ -21,14 +21,21 @@
                                       <td colspan="2"> <h3>Project Category:</h3></td>
                                   </tr>
                                   <tr> <td colspan="2"><li>{{category.name}}</li></h2></td>
-                            <h3>Project Tags:</h3>
-        <br />
-                        <ul>
-                            {% for tag in data.tags_set.all %}
-                            <li>#{{tag.tag_name}}</li>
-                            {% endfor %}
-                        </ul>
-        <br />
+                                   <h3>Project Tags:</h3>
+
+                            <br />
+
+                                           <ul>
+                                           {% for tag in data.tags.all %}
+                                                <li>{{ tag.tag_name }}</li>
+                                            {% endfor %}
+                                           </ul>
+
+
+
+
+
+                            <br />
 
                     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
                         <div class="carousel-inner">

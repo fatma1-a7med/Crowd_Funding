@@ -17,10 +17,11 @@ def perojects_index(request):
     return render(request,'user_projects/allprojects.html',
                   context={'projects':projects})
 def add_project(request):
-     # if 'id' in request.session:
-      return render(request,"user_projects/add_project.html",{"categories" : Category.objects.all()})
-     # else:
-     #   return  redirect('/login')
+    # if 'id' in request.session:
+             return render(request, "user_projects/add_project.html", {"categories": Category.objects.all()})
+    # else:
+           # return  redirect('/accounts/login/')
+
 
 
 def add_category(request):
@@ -48,13 +49,16 @@ def save_project(request):
             total_target=request.POST["project_total_target"],
             start_time=request.POST["project_start_date"],
             end_time=request.POST["project_end_date"],
-            category=category
+            category=category,
+
+
         )
         my_project.save()
 
         # Saving project tags
-        for tag in request.POST.get("project_tags", "").split(","):
-            Tags.objects.create(project=my_project, tag_name=tag.strip())
+        for tag_name in request.POST.get("project_tags", "").split(","):
+            tag, created = Tags.objects.get_or_create(tag_name=tag_name.strip())
+            my_project.tags.add(tag)
 
         # Saving project images
         for _img in request.FILES.getlist('project_images[]'):
@@ -68,34 +72,22 @@ def save_project(request):
         return render(request, "user_projects/add_project.html")
 
 
-# def project_details(request, _id):
-#     # if 'id' in request.session:
-#     #     print('mwgooooookokokokokokokd')
-#         project_data = Project.objects.get(id=_id)
-#         project_category = Category.objects.get(id=project_data.category_id)
-#         project = {"data": project_data, "category": project_category,
-#                    "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
-#                    "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
-#                    "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
-#
-#         return render(request, "user_projects/sliderpase.html", project)
-#
-#     # else:
-#         print('sssssssssss')
-#         return redirect('/login')
+
 def project_details(request, _id):
     # Retrieve the project, but exclude reported projects
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
 
     if project_data is None:
-
         return redirect('some_error_page')
+
 
     project_category = Category.objects.get(id=project_data.category_id)
     project = {"data": project_data, "category": project_category,
                "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
                "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
-               "rate_count": project_data.rate_set.all().aggregate(Count('rate'))}
+               "rate_count": project_data.rate_set.all().aggregate(Count('rate')),
+               "tags": project_data.tags.all()
+               }
 
     return render(request, "user_projects/sliderpase.html", project)
 

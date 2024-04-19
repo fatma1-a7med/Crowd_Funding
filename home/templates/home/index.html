@@ -76,7 +76,11 @@
         {% for project in projects %}
             <div class="col">
                 <div class="card">
-                    <img src="{{ project.image_url }}" class="card-img-top img-fluid mx-auto d-block" style="max-width: 200px; max-height: 200px;" alt="{{ project.project_title }}">
+                   {% for image in project.images_set.all %}
+                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                            </div>
+                            {% endfor %}
                     <div class="card-body text-center">
                         <h5 class="card-title"> Project Title: {{ project.project_title }}</h5>
                         <p class="card-text">Project Details: {{ project.project_details }}</p>
@@ -86,12 +90,14 @@
                         <p class="card-text">Project Category: {{ project.category.name }}</p>
                          <p class="card-text">
                             <h5>Project Tags:</h5>
-                             <br />
-                             <ul>
-                             {% for project in project.Tags.all %}
-                             <li>{{ project.tag_name }}</li>
-                              {% endfor %}
-                              </ul> 
+
+                            <br />
+                           <ul>
+                              {% for tag in project.tags.all %}
+                               <li>{{tag.tag_name}}</li>
+                               {% endfor %}
+                           </ul>
+                            <br />
                         </p> 
                         
                     </div>
