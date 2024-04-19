@@ -166,7 +166,7 @@ EMAIL_HOST_PASSWORD = "cwyx cxhs ttpy fjva"
 DEFAULT_FROM_EMAIL = "fatmaalzahraa.ahmed.fathy@gmail.com"
 
 
-#LOGIN_REDIRECT_URL = '../../home/'
+LOGIN_REDIRECT_URL = 'home'
 
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 

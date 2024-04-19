@@ -22,13 +22,15 @@
         .nav-link {
             color: white !important;
         }
+        .nav-link:hover {
+            color: #F4EEE0;
+        }
         .sign_in, .sign_up {
             background-color: #F4EEE0;
             color: #4F4557;
             border: 2px solid #4F4557;
             margin-right: 5px;
             border: 2px solid #F4EEE0;
-
         }
         .sign_up {
             background-color: #4F4557;
@@ -44,11 +46,18 @@
             padding: 2rem;
 
         }
-        .fa-circle-user{
-            font-size:34px;
+        .fa-circle-user, .fa-right-from-bracket{
+            font-size:20px;
+            color:#4F4557;
         }
         #searchForm{
             margin-right:400px
+        }
+        .search:hover{
+            color:#F4EEE0
+        }
+        .sign_in:hover{
+            color:#4F4557
         }
 
 
@@ -78,7 +87,7 @@
             </ul>
             <form class="d-flex" id="searchForm" method="GET" action="{% url 'home' %}">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
-                <button class="btn sign_up mr-5" type="submit">Search</button>
+                <button class="btn sign_up mr-5 search" type="submit">Search</button>
             </form>
             {% if user.is_authenticated %}
             <!-- Display username and logout option -->
@@ -88,15 +97,15 @@
                 {{ userData.username }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'account.profile' %}">Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                    <li><a class="dropdown-item" href="{% url 'account.profile' %}"> <i class="fa-regular fa-circle-user"></i>  Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
         {% else %}
             <!-- Display sign-in and sign-up options -->
      
-                <a class="nav-link" aria-current="page" href="{% url 'login'%}">Sign in</a>
+                <a class="nav-link btn sign_in" aria-current="page" href="{% url 'login'%}">Sign in</a>
           
-                <a class="nav-link" aria-current="page" href="{% url 'account.register' %}">Sign up</a>
+                <a class="nav-link btn sign_up" aria-current="page" href="{% url 'account.register' %}">Sign up</a>
             
         {% endif %}
         </div>
@@ -149,7 +158,7 @@
         </div>
         <div class="row mt-4">
             <div class="col-md-12 text-center">
-                <p>&copy; 2024 CrowdfundMe. All rights reserved.</p>
+                <p>&copy; 2024 RallyFund All rights reserved.</p>
             </div>
         </div>
     </div>
