@@ -172,10 +172,9 @@
                             <h5>Project Tags:</h5>
                             <br>
                             <ul>
-                                {% if project.tags.exists %}
-                                    {% for tag in project.tags.all %}
-                                        <li>{{ tag.tag_name }}</li>
-                                    {% endfor %}
+                                {% for tag in project.tags.all %}
+                                <li>{{tag.tag_name}}</li>
+                                {% endfor %}
                                 {% else %}
                                     <li>No tags associated with this project.</li>
                                 {% endif %}
