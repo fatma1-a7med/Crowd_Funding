@@ -7,6 +7,8 @@
 {% block content %}
 
 {% if search_results %}
+
+
     {% if category %}
         <!-- Display category details -->
         <div class="container my-5">
@@ -30,10 +32,13 @@
                 {% for project in search_results %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.project_details }}">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ project.name }}</h5>
-                                <p class="card-text">Description: {{ project.description }}</p>
+                            {% for image in project.images_set.all %}
+                            <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                            {% endfor %}
+                        
+                                <div class="card-body">
+                                <h5 class="card-title">{{ project.project_title }}</h5>
+                                <p class="card-text">Description: {{ project.project_details }}</p>
                                 <a href="{{ project.show_url }}" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
@@ -48,11 +53,14 @@
                 {% for project in search_results %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
-                            <img src="{{  project.image_url }}" class="card-img-top" alt="{{  project.project_title}}">
+                            {% for image in project.images_set.all %}
+                            <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                            {% endfor %}
+                        
                             <div class="card-body">
-                                <h5 class="card-title">{{ book.name }}</h5>
-                                <p class="card-text">Price: L.E{{ book.price }}</p>
-                                <a href="{{ book.show_url }}" class="btn btn-primary">View Details</a>
+                                <h5 class="card-title">{{ project.project_title }}</h5>
+                                <p class="card-text">Description: {{ project.project_details }}</p>
+                                <a href="{{ project.show_url }}" class="btn btn-primary">View Details</a>
                             </div>
                         </div>
                     </div>
@@ -62,59 +70,73 @@
             </div>
         </div>
     {% endif %}
-{% else %}
-    <p class="text-center my-5">No results found.</p>
 {% endif %}
 
 
+<style>
+    .carousel-item img {
+      max-height: 300px; 
+    }
+    .carousel {
+      width: 80%; 
+      margin: 0 auto; 
+    }
+  </style>
 
-
-{% comment %} latest added project {% endcomment %}
-<h2 class="my-5 text-dark text-center">New Projects</h2>
-<div class="container">
-    <div class="row row-cols-3 row-cols-md-3 g-4">
-        {% for project in projects %}
-            <div class="col">
+{% comment %} slide show to see the hieghs rated projects {% endcomment %}
+<body>
+    <div class="container">
+      <div id="projectCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+          {% for highest_rated_project in projects %}
+          <div class="carousel-item {% if forloop.first %}active{% endif %}">
+            <div class="row justify-content-center"> 
+              <div class="col-md-8"> 
+                <h3 class="text-center text-dark">Top Five Projects</h3>
                 <div class="card">
-                   {% for image in project.images_set.all %}
-                            <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
-                            </div>
-                            {% endfor %}
-                    <div class="card-body text-center">
-                        <h5 class="card-title"> Project Title: {{ project.project_title }}</h5>
-                        <p class="card-text">Project Details: {{ project.project_details }}</p>
-                        <p class="card-text">Project Start: {{ project.start_time }}</p>
-                        <p class="card-text">Project End: {{ project.end_time }}</p>
-                        <p class="card-text">Project Target: {{ project.total_target }}</p>
-                        <p class="card-text">Project Category: {{ project.category.name }}</p>
-                         <p class="card-text">
-                            <h5>Project Tags:</h5>
-
-                            <br />
-                           <ul>
-                              {% for tag in project.tags.all %}
-                               <li>{{tag.tag_name}}</li>
-                               {% endfor %}
-                           </ul>
-                            <br />
-                        </p> 
-                        
-                    </div>
+                  <div class="card-body text-center">
+                    {% for image in highest_rated_project.images_set.all %}
+                    <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                    {% endfor %}
+                    <h5 class="card-title">Project Title: {{ highest_rated_project.project_title }}</h5>
+                    <p class="card-text">Project Details: {{ highest_rated_project.project_details }}</p>
+                    <p class="card-text">Project Start: {{ highest_rated_project.start_time }}</p>
+                    <p class="card-text">Project End: {{ highest_rated_project.end_time }}</p>
+                    <p class="card-text">Project Target: {{ highest_rated_project.total_target }}</p>
+                    <p class="card-text">Project Category: {{ highest_rated_project.category.name }}</p>
+                    {% comment %} <p class="card-text">Rate: {{ highest_rated_project.rate }}</p> {% endcomment %}
                 </div>
+                </div>
+              </div>
             </div>
-        {% endfor %}
+          </div>
+          {% endfor %}
+        </div>
+        <a class="carousel-control-prev" href="#projectCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#projectCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
     </div>
-</div>
+    
+{% comment %} most important projects {% endcomment %}
 
-<h2 class="my-5 text-dark text-center">Most Important Project</h2>
+<h2 class="my-5 text-dark text-center">Most Important Projects</h2>
 <div class="container">
     <div class="row row-cols-3 row-cols-md-3 g-4">
         {% for project in featured_projects %}
             <div >
                 <div class="card">
-                    <img src="{{ project.image_url }}" class="card-img-top" alt="{{ project.name }}">
-                    <div class="card-body">
+                       <div class="card-body text-center">
+                        <div class="carousel-inner">
+                        {% for image in project.images_set.all %}
+                            <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                        {% endfor %}
+                        </div>  
                         <h5 class="card-title">Name: {{ project.project_title }}</h5>
                         <p class="card-text">Details: {{ project.project_details }}</p>
                         <a href="{{ project.show_url }}" class="btn btn-primary">View Details</a>
@@ -124,6 +146,51 @@
         {% endfor %}
     </div>
 </div>
+
+
+{% comment %} latest added project {% endcomment %}
+<h2 class="my-5 text-dark text-center">New Projects</h2>
+<div class="container">
+    <div class="row row-cols-3 row-cols-md-3 g-4">
+        {% for project in projects %}
+            <div class="col">
+                <div class="card">
+                    <div class="carousel-inner">
+                        {% for image in project.images_set.all %}
+                        <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                        {% endfor %}
+                    
+                    </div>  
+                     <div class="card-body text-center">
+                        <h5 class="card-title"> Project Title: {{ project.project_title }}</h5>
+                        <p class="card-text">Project Details: {{ project.project_details }}</p>
+                        <p class="card-text">Project Start: {{ project.start_time }}</p>
+                        <p class="card-text">Project End: {{ project.end_time }}</p>
+                        <p class="card-text">Project Target: {{ project.total_target }}</p>
+                        <p class="card-text">Project Category: {{ project.category.name }}</p>
+                        <p class="card-text">
+                            <h5>Project Tags:</h5>
+                            <br>
+                            <ul>
+                                {% if project.tags.exists %}
+                                    {% for tag in project.tags.all %}
+                                        <li>{{ tag.tag_name }}</li>
+                                    {% endfor %}
+                                {% else %}
+                                    <li>No tags associated with this project.</li>
+                                {% endif %}
+                            </ul>
+                        </p>
+                        
+                            
+                        
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
 
 
 {% endblock %} 
