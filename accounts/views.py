@@ -69,6 +69,8 @@ def update_profile(request):
     context = {
         'form': form,
     }
+    if form.errors:
+        context['errors'] = form.errors 
 
     return render(request, 'accounts/update_profile.html', context)
 

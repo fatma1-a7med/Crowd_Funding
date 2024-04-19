@@ -1,6 +1,3 @@
-
-<!-- update_profile.html -->
-
 {% extends 'layouts/base.html' %}
 {% load static %}
 
@@ -15,35 +12,75 @@
                     <div class="col-md-6">
                         <label for="id_first_name" class="form-label">First Name</label>
                         <input type="text" name="first_name" id="id_first_name" class="form-control" value="{{ form.first_name.value }}">
+                        {% if form.first_name.errors %}
+                            <div class="invalid-feedback d-block">
+                               <strong>{{ form.first_name.errors.0 }}</strong> 
+                            </div>
+                        {% endif %}
                     </div>
                     <div class="col-md-6">
                         <label for="id_last_name" class="form-label">Last Name</label>
                         <input type="text" name="last_name" id="id_last_name" class="form-control" value="{{ form.last_name.value }}">
+                        {% if form.last_name.errors %}
+                            <div class="invalid-feedback d-block">
+                               <strong>{{ form.last_name.errors.0 }}</strong> 
+                            </div>
+                        {% endif %}
                     </div>
                 </div>
                 <div class="mb-3">
                     <label for="id_email" class="form-label">Email</label>
                     <input type="email" name="email" id="id_email" class="form-control" value="{{ form.email.value }}" readonly>
+                    {% if form.email.errors %}
+                        <div class="invalid-feedback d-block">
+                           <strong>{{ form.email.errors.0 }}</strong> 
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_mobile_phone" class="form-label">Mobile Phone</label>
                     <input type="text" name="mobile_phone" id="id_mobile_phone" class="form-control" value="{{ form.mobile_phone.value }}">
+                    {% if form.mobile_phone.errors %}
+                        <div class="invalid-feedback d-block">
+                            <strong>Please enter a valid Egyptian phone number starting with +20</strong>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_birthdate" class="form-label">Birthdate</label>
                     <input type="date" name="birthdate" id="id_birthdate" class="form-control" value="{{ form.birthdate.value }}">
+                    {% if form.birthdate.errors %}
+                        <div class="invalid-feedback d-block">
+                           <strong>{{ form.birthdate.errors.0 }}</strong> 
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_facebook_profile" class="form-label">Facebook Profile</label>
                     <input type="url" name="facebook_profile" id="id_facebook_profile" class="form-control" value="{{ form.facebook_profile.value }}">
+                    {% if form.facebook_profile.errors %}
+                        <div class="invalid-feedback d-block">
+                            <strong>Please enter a valid URL for the Facebook profile or leave it empty</strong>
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_country" class="form-label">Country</label>
                     <input type="text" name="country" id="id_country" class="form-control" value="{{ form.country.value }}">
+                    {% if form.country.errors %}
+                        <div class="invalid-feedback d-block">
+                           <strong>{{ form.country.errors.0 }}</strong> 
+                        </div>
+                    {% endif %}
                 </div>
                 <div class="mb-3">
                     <label for="id_profile_picture" class="form-label">Profile Picture</label>
                     <input type="file" name="profile_picture" id="id_profile_picture" class="form-control" accept="images/*">
+                    {% if form.profile_picture.errors %}
+                        <div class="invalid-feedback d-block">
+                        <strong>{{ form.profile_picture.errors.0 }}</strong>
+                        </div>
+                    {% endif %}
                 </div>
                 <button type="submit" class="btn btn-primary">Update</button>
             </form>
