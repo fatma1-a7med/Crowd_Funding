@@ -44,6 +44,12 @@
             padding: 2rem;
 
         }
+        .fa-circle-user{
+            font-size:34px;
+        }
+        #searchForm{
+            margin-right:400px
+        }
 
 
     </style>
@@ -70,22 +76,32 @@
 
 
             </ul>
-            <form class="d-flex mx-5" method="GET" action="{% url 'home' %}">
+            <form class="d-flex" id="searchForm" method="GET" action="{% url 'home' %}">
                 <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
                 <button class="btn sign_up mr-5" type="submit">Search</button>
-
-
             </form>
-            <a class=" btn sign_in" aria-current="page" href="#">Sign in</a>
-            <a class=" btn sign_up" aria-current="page" href="#">Sign up</a>
+            {% if user.is_authenticated %}
+            <!-- Display username and logout option -->
+            <div class="dropdown">
+                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                <img src="{{userData.profile_picture.url}}" width="40" height="40">
+                {{ userData.username }}
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                    <li><a class="dropdown-item" href="{% url 'account.profile' %}">Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+        {% else %}
+            <!-- Display sign-in and sign-up options -->
+     
+                <a class="nav-link" aria-current="page" href="{% url 'login'%}">Sign in</a>
+          
+                <a class="nav-link" aria-current="page" href="{% url 'account.register' %}">Sign up</a>
+            
+        {% endif %}
         </div>
     </div>
-</nav>{% comment %} 
-<section class="home_section">
-    <h2>Join Us
-   Building a Better Future Together!  </h2>
-</section>
- {% endcomment %}
+</nav>
 <div class="my-3">
     <div class=" p-3 mb-3">
         {% block content %}

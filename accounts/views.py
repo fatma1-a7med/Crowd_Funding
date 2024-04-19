@@ -14,6 +14,8 @@ from django.core.mail import EmailMessage
 
 from django.contrib.auth import get_user_model,login
 
+from django.contrib.auth import logout
+from django.shortcuts import redirect
 # Create your views here.
 
 def profile_view(request):
@@ -144,3 +146,9 @@ def activate(request,uidb64, token):
     else:
         messages.error(request, "Activation link is invalid or expired")
         return redirect(reverse("index"))
+    
+
+def logout_view(request):
+    logout(request)
+    messages.success(request, "You have been successfully logged out.")
+    return redirect('categories') 

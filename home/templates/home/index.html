@@ -175,9 +175,8 @@
                                 {% for tag in project.tags.all %}
                                 <li>{{tag.tag_name}}</li>
                                 {% endfor %}
-                                {% else %}
+                                {% empty %}
                                     <li>No tags associated with this project.</li>
-                                {% endif %}
                             </ul>
                         </p>
                         
