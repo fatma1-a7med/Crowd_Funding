@@ -174,9 +174,10 @@
                             <ul>
                                 {% for tag in project.tags.all %}
                                 <li>{{tag.tag_name}}</li>
-                                {% endfor %}
+                                
                                 {% empty %}
                                     <li>No tags associated with this project.</li>
+                                {% endfor %}
                             </ul>
                         </p>
                         
