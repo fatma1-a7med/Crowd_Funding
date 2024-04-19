@@ -10,14 +10,15 @@
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #4F4557;">
                         <li class="nav-item" >
-                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'account.profile' %}" role="tab" aria-controls="home" aria-selected="true">About</a>
-                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'userProjects' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">projects</a>
-                            <a style="color: #4F4557;" class="nav-link" id="home-tab" data-toggle="tab" href="{% url 'user_donations' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">donations</a>
+                            <a class="nav-link" id="home-tab" href="{% url 'account.profile' %}" role="tab" aria-controls="home" aria-selected="true">About</a>
+                            <a class="nav-link" id="home-tab" href="{% url 'userProjects' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">projects</a>
+                            <a class="nav-link" id="home-tab" href="{% url 'user_donations' request.user.id %}" role="tab" aria-controls="home" aria-selected="true">donations</a>
                         </li>
                     </ul>
                   </div>
                   </div>
                   <div class="row">
+                    {% if projects %}
                 {% for project in projects %}
                     <div class="col-md-4 mb-4">
                         <div class="card">
@@ -32,6 +33,11 @@
                         </div>
                     </div>
                 {% endfor %}
+                {% else %}
+                    <div class="col-md-12">
+                        <p class="alert alert-warning">This user has no projects yet.</p>
+                    </div>
+                {% endif %}
             </div>
         </div>
     </div>
