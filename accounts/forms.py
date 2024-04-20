@@ -18,10 +18,16 @@ class RegisterationForm(UserCreationForm):
             raise ValidationError("An account with this email address already exists!!")
         return email
     
+from django import forms
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User
+from .models import Profile
+
 class ProfileUpdateForm(forms.ModelForm):
-    first_name = forms.CharField(max_length=30, required=False)
-    last_name = forms.CharField(max_length=30, required=False)
+    first_name = forms.CharField(max_length=30, required=True)
+    last_name = forms.CharField(max_length=30,required=True)
     email = forms.EmailField(disabled=True)
+    mobile_phone = forms.RegexField(regex=r'^\+?20?1[0-9]{9}$',required=True)    
     birthdate = forms.DateField(required=False)
     facebook_profile = forms.URLField(required=False)
     country = forms.CharField(max_length=100, required=False)
@@ -39,6 +45,25 @@ class ProfileUpdateForm(forms.ModelForm):
             self.fields['last_name'].initial = user.last_name
             self.fields['email'].initial = user.email
 
+    def clean_first_name(self):
+        first_name = self.cleaned_data['first_name']
+        if not first_name.isalpha():
+            raise ValidationError('Please enter a valid first name.')
+        return first_name
+
+    def clean_last_name(self):
+        last_name = self.cleaned_data['last_name']
+        if not last_name.isalpha():
+            raise ValidationError('Please enter a valid last name.')
+        return last_name  
+
+    def clean_country(self):
+        country = self.cleaned_data['country']
+        if not country.isalpha():
+            raise ValidationError('Please enter a valid country name.')
+        return country 
+
+  
     def save(self, commit=True):
         profile = super(ProfileUpdateForm, self).save(commit=False)
         user = profile.user
@@ -48,6 +73,7 @@ class ProfileUpdateForm(forms.ModelForm):
             profile.save()
             user.save()
         return profile
+
 
 class PasswordVerificationForm(forms.Form):
     password = forms.CharField(label='Password', widget=forms.PasswordInput)

@@ -5,14 +5,11 @@ from .models import *
 def mark_as_featured(modeladmin, request, queryset):
     selected_project_count = queryset.count()
     if selected_project_count > 5:
-        modeladmin.message_user(request, "You can only select up to 5 projects as featured.", level='ERROR')
+        raise ValueError("You can only select up to 5 projects as featured.")
     else:
-        # Limit queryset to 5 projects and mark them as featured
         queryset.update(featured=True)
-
 mark_as_featured.short_description = "Mark selected projects as featured (max 5)"
 
-# Define ProjectAdmin class
 class ProjectAdmin(admin.ModelAdmin):
     list_display = ['project_title', 'project_details', 'featured']
     list_editable = ['featured']
@@ -29,4 +26,3 @@ admin.site.register(Donation)
 admin.site.register(Rate)
 admin.site.register(CommentReports)
 admin.site.register(ProjectReports)
-admin.site.register(Tags)

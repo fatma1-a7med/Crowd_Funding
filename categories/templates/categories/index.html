@@ -39,11 +39,13 @@
     <tr>
         <th>Id</th>
         <th>Name</th>
+        <th>Actions</th>
     </tr>
     {% for category in categories %}
     <tr>
         <td>{{ category.id }}</td>
         <td>{{ category.name }}</td>
+        <td><a href="{{ category.show_url }}" class="btn btn-info">Show</a></td>
         {% comment %} <td>
             <a class="btn btn-info" href="{{category.show_url}}">Show</a>
         </td> {% endcomment %}

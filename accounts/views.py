@@ -14,8 +14,14 @@ from django.core.mail import EmailMessage
 
 from django.contrib.auth import get_user_model,login
 
-# Create your views here.
+from django.contrib.auth import logout
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required
+from django.utils import timezone
+from datetime import timedelta
 
+# Create your views here.
+@login_required
 def profile_view(request):
     current_user = request.user
     user_id = current_user.id
@@ -47,7 +53,7 @@ def profile_view(request):
     return render(request, 'accounts/profile.html', context)
 
 
-
+@login_required
 def update_profile(request):
     current_user = request.user
     profile = current_user.profile
@@ -63,11 +69,13 @@ def update_profile(request):
     context = {
         'form': form,
     }
+    if form.errors:
+        context['errors'] = form.errors 
 
     return render(request, 'accounts/update_profile.html', context)
 
 
-
+@login_required
 def delete_account(request):
     if request.method == 'POST':
         password_form = PasswordVerificationForm(request.POST)
@@ -135,12 +143,21 @@ def activate(request,uidb64, token):
         user=None
     
     if user is not None and account_activation_token.check_token(user,token):
+        # Check if the activation link has expired
+        if user.date_joined + timedelta(hours=24) < timezone.now():
+            messages.error(request, "Activation link has expired. Please register again.")
+            return redirect(reverse("index"))
         user.is_active =True
         user.save()
 
         login(request, user)
-        messages.success(request, "Your account has been successfully activated")
+        #messages.success(request, "Your account has been successfully activated")
         return redirect(reverse("login"))
     else:
         messages.error(request, "Activation link is invalid or expired")
         return redirect(reverse("index"))
+    
+
+def logout_view(request):
+    logout(request)
+    return redirect('home') 
