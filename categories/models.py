@@ -39,4 +39,15 @@ class Category(models.Model):
     @property
     def show_url(self):
      return reverse("categories.show", args= [self.id])    
+    
+    @property
+    def delete_url(self):
+     return reverse('category.delete', args=[self.id])  
+    
+
+    @property
+    def edit_url(self):
+     return reverse('category.edit', args=[self.id])
+    
+
 

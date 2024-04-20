@@ -36,6 +36,24 @@ def category_show(request,id):
     return render(request,'categories/show.html',
                   context={'category':category})
 
+
+def category_edit(request, id):
+    category = get_object_or_404(Category, pk=id)
+    form = CategoryModelForm(instance=category)
+    if request.method == "POST":
+        form = CategoryModelForm(request.POST, request.FILES, instance=category)
+        if form.is_valid():
+            form.save()
+            return redirect('categories.index')
+    return render(request, 'categories/edit.html', {'form': form, 'category': category})
+
+
+def category_delete(request, id):
+    category = get_object_or_404(Category, pk=id)
+    category.delete()
+    # return HttpResponse("project deleted")
+    return redirect(reverse("categories.index"))
+
 # def show_category_details(request, pk):
 #     category = get_object_or_404(Category, pk=pk)
 #     return render(request, 'categories/category_details.html', {'category': category})
