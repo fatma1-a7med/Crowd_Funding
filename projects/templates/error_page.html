@@ -1,9 +1,10 @@
-{% extends "user_projects/base.html" %}
+{% extends "layouts/base.html" %}
+
+
 
 {% block content %}
-  <div class="container">
-    <h1>Error</h1>
-    <p>The project you are trying to access does not exist or has been reported.</p>
-
+  <div id="error-container">
+    <h1 id="error-title">Error</h1>
+    <p id="error-message">The project you are trying to access does not exist or has been reported.</p>
   </div>
 {% endblock %}

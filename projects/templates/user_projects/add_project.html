@@ -1,28 +1,7 @@
-{%extends "user_projects/base.html"%}{% block title %}Add Project{% endblock %}
+{%extends "layouts/base.html"%}{% block title %}Add Project{% endblock %}
 {%block content %}
 
-<div class="container mt-3">
-    <div class="row">
-        {% comment %} <form action="/categories/add" method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="form-group">
-                <label>name</label>
-                <input
-                    type="text"
-                    class="form-control"
-                    name="name"
-                    placeholder="Category Title"
-                    required
-                />
-            </div>
 
-            <div class="form-group">
-                <input
-                    type="submit"
-                    class="form-control btn btn-outline-light btn-dark"
-                    value="Add Category"
-                />
-        </form> {% endcomment %}
         <form
             action="/projects/save"
             method="post"
@@ -49,7 +28,8 @@
                         id="category"
                         name="project_category"
                         class="form-control"
-                        required>
+                        required
+                    >
                         <option selected>Choose...</option>
                         {% for cat in categories %}
                         <option value="{{cat.id}}">{{cat.name}}</option>
@@ -154,7 +134,7 @@
                 <input
                     type="submit"
                     id="submit"
-                    class="form-control btn btn-outline-light btn-dark"
+                    class="form-control btn  btn-dark custom-submit-btn"
                     value="Add Project"
                 />
                 <small id="submitMessage" class="form-text text-danger">

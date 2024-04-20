@@ -1,4 +1,4 @@
-{% extends 'user_projects/base.html' %}
+{% extends 'layouts/base.html' %}
 {% load static %}
 {% block content %}
 
@@ -92,10 +92,17 @@
 
         <h5 class="card-title">{{ comment.user.first_name}} {{comment.user.last_name}}</h5>
         <p class="card-text">{{ comment.content }}</p>
-                <form action="/comment/reply" method="post">
+                               {% for reply in comment.replies.all %}
+
+                                             <h5 class="card-title">{{ reply.user.first_name}} {{reply.user.last_name}}</h5>
+                                              <p class="card-text">{{ reply.content }}</p>
+                              {% empty %}
+                                  <p>No replies yet.</p>
+                               {% endfor %}
+                <form action="/projects/comment/replay" method="post">
                   {% csrf_token %}
                   <input type="hidden" name="comment_id" value="{{ comment.id }}">
-                  <input type="hidden" name="project_id" value="{{ data.id }}">
+                  <input type="hidden" name="id" value="{{ data.id }}">
 
                   <textarea name="content" class="form-control" rows="3" required></textarea>
                   <button type="submit" class="btn btn-primary mt-2">Reply</button>
@@ -123,21 +130,37 @@
                 </div>
             {% if data.total_target|sub:total_donate.amount__sum > data.total_target|div:4 %}
 
-    <form action="/projects/project/delete" method="post">
-        {% csrf_token %}
-        <input type="hidden" name="id" value="{{data.id}}" />
-
-
-        <button type="submit" class="btn btn-danger mt-2">Cancel Project</button>
-    </form>
-
+<form id="delete-form" action="/projects/project/delete/{{ data.id }}" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="project_id" value="{{ data.id }}" />
+    <button type="button" id="delete-btn" class="btn btn-danger mt-2">Cancel Project</button>
+</form>
     {% endif %}
-				<form action="/projects/project/report" method="POST">
+				<form  action="/projects/project/report" method="POST">
                   {%csrf_token%}
                 <input type="hidden" name="id" value="{{data.id}}"/>
                 <button type="submit" class="btn btn-danger mt-2">ReportProject</button>
                </form>
 
+<h1 class="subTitle"> Related Projects</h1>
+
+<div class="row">
+      {% for data in relatedProjects %}
+      {% if forloop.counter < 5 %}
+      {% if data != data %}
+      <div class="col-md-3 mt-4">
+            <div class="card cardDes">
+                  <img src="" class="card-img-top projImg">
+                  <div class="card-body">
+                        <h5 class="card-title">{{data.project_title }}</h5>
+                        <p class="card-text desc">{{data.project_details }}</p>
+<!--                        <a href="{% url 'show_proj' data.id %}" class="btn btn-primary"> Show Details </a>-->
+                  </div>
+            </div>
+      </div>
+      {% endif %}
+       {% endif %}
+      {% endfor %}
             </div>
         </div>
     </div>
@@ -145,6 +168,27 @@
 {% else %}
 <p>This project has been reported and is currently not available.</p>
 {% endif %}
+
+
+
+
+<script>
+document.getElementById('delete-btn').addEventListener('click', function() {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            document.getElementById('delete-form').submit();
+        }
+    });
+});
+</script>
 {% endblock %}
 
 

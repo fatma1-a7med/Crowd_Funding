@@ -1,21 +1,26 @@
 from django.db import models
 from django.db.models import Sum, Count
-from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.core.files.storage import FileSystemStorage
+from django.http.response import HttpResponse,HttpResponseForbidden
 from datetime import datetime
 from decimal import Decimal, ROUND_HALF_UP
 from django.db.models import Q, Avg, Sum,F
+from django.contrib.auth.decorators import login_required
 from .models import *
 
 
 
 
+@login_required
 def perojects_index(request):
     projects = Project.get_all_projects()
     return render(request,'user_projects/allprojects.html',
                   context={'projects':projects})
+
+@login_required
 def add_project(request):
     # if 'id' in request.session:
              return render(request, "user_projects/add_project.html", {"categories": Category.objects.all()})
@@ -24,6 +29,7 @@ def add_project(request):
 
 
 
+@login_required
 def add_category(request):
     if request.method == "POST":
         Category(None,request.POST["name"]).save()
@@ -56,7 +62,7 @@ def save_project(request):
         my_project.save()
 
         # Saving project tags
-        for tag_name in request.POST.get("project_tags", "").split(","):
+        for tag_name in request.POST.get("project_tags", "").split(" "):
             tag, created = Tags.objects.get_or_create(tag_name=tag_name.strip())
             my_project.tags.add(tag)
 
@@ -76,7 +82,8 @@ def save_project(request):
 def project_details(request, _id):
     # Retrieve the project, but exclude reported projects
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
-
+    relatedProjects = Project.objects.all().filter(category_id=project_data.category)
+    print(relatedProjects)
     if project_data is None:
         return redirect('some_error_page')
 
@@ -86,7 +93,8 @@ def project_details(request, _id):
                "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
                "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
                "rate_count": project_data.rate_set.all().aggregate(Count('rate')),
-               "tags": project_data.tags.all()
+               "tags": project_data.tags.all(),
+               "relatedProjects" :relatedProjects
                }
 
     return render(request, "user_projects/sliderpase.html", project)
@@ -97,6 +105,15 @@ def add_comment(request):
         project = Project.objects.get(id=request.POST["id"])
         user_id = request.user.id
         Comment(user_id=user_id,project_id=project, content=request.POST["content"]).save()
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def add_reply(request):
+    if request.method == "POST":
+        comment = Comment.objects.get(id=request.POST["comment_id"])
+        user = request.user
+
+        Reply(user=user, comment=comment, content=request.POST["content"]).save()
+
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
@@ -185,14 +202,25 @@ def some_error_page(request):
 
 
 
-def delete_project(request):
+
+
+def delete_project(request, id):
     if request.method == "POST":
-        Project.objects.filter(id=request.POST["id"]).delete()
-        return HttpResponseRedirect("/projects/add")
+        # Get the project object
+        project = get_object_or_404(Project, id=id)
+        print(request.user.id)
+        # Check if the current user is the owner of the project
+        if request.user.id == project.user_id:
+            print(request.user)
+            # Delete the project
+            project.delete()
+
+            return HttpResponseRedirect("/projects/add")
+        else:
+
+            return HttpResponseForbidden("Not allowed")
 
 
-# def home(req):
-#     latest_project = Project.objects.order_by('-created_at')[:5]
-#     # print("Latest Projects:", latest_project)  # Add this line for debugging
-#     return render(req, 'index.html', context={'projects': latest_project})
+
+
 

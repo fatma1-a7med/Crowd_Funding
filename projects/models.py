@@ -56,6 +56,11 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
     is_reported = models.BooleanField(default=False)
 
+class Reply(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='replies')
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
 
 class Rate(models.Model):
     rate = models.IntegerField(validators=[
@@ -86,7 +91,3 @@ class ProjectReports(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
 
-class ReplayComment(models.Model):
-    comment_id = models.ForeignKey(Comment, on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    comment_content = models.TextField(default=' ')

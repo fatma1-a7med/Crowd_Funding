@@ -294,26 +294,29 @@
                         <div class="card-body">
                             <h5 class="card-title">{{ comment.user_id.f_name }} {{ comment.user_id.l_name }}</h5>
                             <p class="card-text">{{ comment.content }}</p>
-                            <a href="#" class="btn btn-primary" data-toggle="modal" data-target="#mymodal{{ comment.id }}">Reply</a>
-                            <div class="modal" id="mymodal{{ comment.id }}">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h4 class="modal-title">Reply to comment</h4>
-                                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form action="/comments/reply" method="post">
-                                                {% csrf_token %}
-                                                <input type="hidden" name="comment_id" value="{{ comment.id }}">
-                                                <input type="hidden" name="project_id" value="{{ data.id }}">
-                                                <input type="hidden" name="user_id" value="1">
-                                                <div class="form-group">
-                                                    <label for="content">Content</label>
-                                                    <textarea class="form-control" name="content" rows="3"></textarea>
-                                                </div>
-                                                <button type="submit" class="btn btn-primary">Reply</button>
-                                            </form>
+
+                                             {% for reply in comment.reply_set.all %}
+    <div>
+      <p>{{ reply.content }}</p>
+
+    </div>
+    {% empty %}
+    <p>No replies yet.</p>
+    {% endfor %}
+    <!-- Form for adding a reply -->
+    <form action="/comments/reply" method="post">
+      {% csrf_token %}
+      <input type="hidden" name="comment_id" value="{{ comment.id }}">
+      <input type="hidden" name="project_id" value="{{ data.id }}">
+      <div class="form-group">
+        <label for="content">Content</label>
+        <textarea class="form-control" name="content" rows="3"></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Reply</button>
+    </form>
+  </div>
+</div>
+
                                         </div>
                                     </div>
                                 </div>
