@@ -127,10 +127,10 @@
                                     <div class="card-body text-center">
                                         <h5 class="card-title">Project Title: {{ project.project_title }}</h5>
                                         <p class="card-text">Project Details: {{ project.project_details }}</p>
-                                        <p class="card-text">Project Start: {{ project.start_time }}</p>
-                                        <p class="card-text">Project End: {{ project.end_time }}</p>
-                                        <p class="card-text">Project Target: {{ project.total_target }}</p>
-                                        <p class="card-text">Project Category: {{ project.category.name }}</p>
+                                        <p class="card-text">Target: ${{ project.total_target }}</p>
+                                        <p class="card-text">Start Time: {{ project.start_time }}</p>
+                                        <p class="card-text">End Time: {{ project.end_time }}</p>
+                                        <p class="card-text">Category: {{ project.category.name }}</p>
                                     </div>
                                 </div>
                             </div>
@@ -222,18 +222,15 @@
                 <div class="card-body text-center">
                     <h5 class="card-title"> Project Title: {{ project.project_title }}</h5>
                     <p class="card-text">Project Details: {{ project.project_details }}</p>
-                    <p class="card-text">Project Start: {{ project.start_time }}</p>
-                    <p class="card-text">Project End: {{ project.end_time }}</p>
-                    <p class="card-text">Project Target: {{ project.total_target }}</p>
-                    <p class="card-text">Project Category: {{ project.category.name }}</p>
-                    <h3>Project Tags:</h3>
-                    <br />
-                    <ul>
+                    <p class="card-text">Target: ${{ project.total_target }}</p>
+                    <p class="card-text">Start Time: {{ project.start_time }}</p>
+                    <p class="card-text">End Time: {{ project.end_time }}</p>
+                    <p class="card-text">Category: {{ project.category.name }}</p>
+                    <p class="card-text"><strong>Tages: </strong>
                         {% for tag in project.tags.all %}
-                        <li>{{ tag.tag_name }}</li>
+                        <p>{{ tag.tag_name }}</p>
                         {% endfor %}
-                    </ul>
-                    <br />
+                    </p>
                 </div>
             </div>
         </div>

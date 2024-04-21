@@ -14,13 +14,12 @@
     {% for project in category.allprojects.all %}
     <div class="col-md-3 mb-3">
         <div class="card baby-blue-card">
-            <div class="card-body">
 {% comment %} ///////////// ////////////////////// {% endcomment %}
- <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel">
+               <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel"style="height: 350px;">
                     <div class="carousel-inner">
                         {% for image in project.images_set.all %}
                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
+                            <img height="350px" class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
                         </div>
                         {% empty %}
                         <p><h2>No Images for this project yet.</h2></p>
@@ -36,6 +35,7 @@
                     </a>
                 </div>
 {% comment %} ////////////////////////////////////{% endcomment %}
+                <div class="card-body text-center">
                 <h5 class="card-title"style="margin-bottom: 12px;" >{{ project.project_title }}</h5>
                 <a href="#" class="btn btn-primary">Show More</a>
 

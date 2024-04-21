@@ -2,17 +2,17 @@
 {% block title %}All Projects{% endblock %}
 {% block content %}
     <div class="container">
-        <h1 class="mt-5 mb-4">All Projects</h1>
+        <h1 class="my-5 mb-4">All Projects</h1>
         <div class="row">
             {% for project in projects %}
             <div class="col-md-4 mb-4">
                 <div class="card">
-                    <div class="card-body">
-                         <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel">
-                    <div class="carousel-inner">
+                    
+                      <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel" style="height: 350px;">
+                         <div class="carousel-inner">
                         {% for image in project.images_set.all %}
                         <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                            <img class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
+                            <img height="350px" class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
                         </div>
                         {% empty %}
                         <p><h2>No Images for this project yet.</h2></p>
@@ -27,8 +27,9 @@
                         <span class="sr-only">Next</span>
                     </a>
                 </div>
-                        <h5 class="card-title">{{ project.project_title }}</h5>
-                        <p class="card-text">{{ project.project_details }}</p>
+                <div class="card-body text-center">
+                        <h5 class="card-title">Project Title: {{ project.project_title }}</h5>
+                        <p class="card-text">Description: {{ project.project_details }}</p>
                         <p class="card-text">Target: ${{ project.total_target }}</p>
                         <p class="card-text">Start Time: {{ project.start_time }}</p>
                         <p class="card-text">End Time: {{ project.end_time }}</p>
