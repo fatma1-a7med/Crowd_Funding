@@ -81,7 +81,7 @@
                     <h3 class="m-4">Comments</h3>
                 {% for comment in data.comment_set.all %}
                  {% if not comment.is_reported %}
-                        <div class="card my-3">
+                        <div class="card m-3">
                           <div class="card-body">
                               {% if comment.user.profile.profile_picture %}
                               <img id="profile_picture" src="{{ comment.user.profile.profile_picture.url }}" class="rounded-circle" style="width:50px ;hieght:50px"/>
@@ -119,12 +119,12 @@
 
                     <form action="/projects/comments/add" method="post">
                         {% csrf_token %}
-                        <div class="form-group">
+                        <div class="form-group m-3">
                             <label for="content">Comment</label>
                             <textarea class="form-control" name="content" rows="3"></textarea>
                         </div>
                         <input type="hidden" name="id" value="{{ data.id }}">
-                        <button type="submit" class="btn btn-primary">Add Comment</button>
+                        <button type="submit" class="btn btn-primary m-3">Add Comment</button>
                     </form>
 
                 </div>
