@@ -1,62 +1,50 @@
-
 {% extends "layouts/base.html" %}
-{% load static %}
-{% block title %} Projects {% endblock %}
-
+{% block title %}All Projects{% endblock %}
 {% block content %}
-<style>
-    .table {
-        width: 100%;
-        border-collapse: collapse;
-        margin-top: 20px;
-    }
-    .table th, .table td {
-        border: 1px solid #ddd;
-        padding: 8px;
-        text-align: left;
-    }
-    .table th {
-        background-color: #e6f7ff; /* Light blue background */
-    }
-    .table img {
-        max-width: 200px;
-        max-height: 200px;
-    }
-    .btn-info {
-        background-color: #4da6ff; /* Blue background */
-        color: white;
-        padding: 6px 12px;
-        border-radius: 4px;
-        text-decoration: none;
-    }
-    .btn-info:hover {
-        background-color: #007bff; /* Darker blue background on hover */
-    }
-</style>
-<h1 style="text-align: center;">All Projects</h1>
-<table class="table">
-    <tr>
-        <th>Project ID</th>
-        <th>Project Name</th>
-        <th>Show</th>
-        <th>Edit</th>
-        <th>Delete</th>
+    <div class="container">
+        <h1 class="my-5 mb-4">All Projects</h1>
+        <div class="row">
+            {% for project in projects %}
+            <div class="col-md-4 mb-4">
+                <div class="card">
+                    
+                      <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel" style="height: 350px;">
+                         <div class="carousel-inner">
+                        {% for image in project.images_set.all %}
+                        <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                            <img height="350px" class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
+                        </div>
+                        {% empty %}
+                        <p><h2>No Images for this project yet.</h2></p>
+                        {% endfor %}
+                    </div>
+                    <a class="carousel-control-prev" href="#carousel_{{ project.id }}" role="button" data-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Previous</span>
+                    </a>
+                    <a class="carousel-control-next" href="#carousel_{{ project.id }}" role="button" data-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="sr-only">Next</span>
+                    </a>
+                </div>
+                <div class="card-body text-center">
+                        <h5 class="card-title">Project Title: {{ project.project_title }}</h5>
+                        <p class="card-text">Description: {{ project.project_details }}</p>
+                        <p class="card-text">Target: ${{ project.total_target }}</p>
+                        <p class="card-text">Start Time: {{ project.start_time }}</p>
+                        <p class="card-text">End Time: {{ project.end_time }}</p>
+                        <p class="card-text">Category: {{ project.category }}</p>
+                        <p class="card-text">Created At: {{ project.created_at }}</p>
+                        {% if project.is_reported %}
+                        <span class="badge badge-warning">Reported</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
 
-    </tr>
-    {% for project in projects %}
-    <tr>
-        <td>{{ project.id }}</td>
-        <td>{{ project.project_title }}</td>
-        <td><a class="btn btn-primary" href="{{ project.show_url }}">Show</a></td>
-        <td><a class="btn btn-warning" href="{{ project.edit_url }}">Edit</a></td>
-        <td><a class="btn btn-danger" href="{{ project.delete_url }}">Delete</a></td>
-    </tr>
-    {% endfor %}
-</table>
+
 
 {% endblock %}
-
-    <!-- Bootstrap JS -->
-    {% comment %} <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script> {% endcomment %}
