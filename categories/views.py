@@ -53,7 +53,3 @@ def category_delete(request, id):
     category.delete()
     # return HttpResponse("project deleted")
     return redirect(reverse("categories.index"))
-
-# def show_category_details(request, pk):
-#     category = get_object_or_404(Category, pk=pk)
-#     return render(request, 'categories/category_details.html', {'category': category})

@@ -37,12 +37,12 @@
 </div>
 {% comment %} ////////////////////////////////////{% endcomment %}
                 <h5 class="card-title"style="margin-bottom: 12px;" >{{ project.project_title }}</h5>
-                <a href="#" class="btn btn-primary">Show More</a>
+                <a href="{{ project.show_url }}" class="btn btn-primary"> Show More </a>
             </div>
         </div>
     </div>
 {% empty %}
-    <p><h2>No projects yet.</h2></p>
+    <p><h2> No projects add yet. </h2></p>
 {% endfor %}
 </div>
 </div>

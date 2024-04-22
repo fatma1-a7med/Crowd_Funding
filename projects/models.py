@@ -34,6 +34,26 @@ class Project(models.Model):
     @property
     def show_url(self):
         return reverse('projectDetails', args=[self.id])
+    
+
+
+# ////////////////////////////////////
+    @property
+    def show_url(self):
+     return reverse("project.show", args= [self.id])    
+    
+    
+# ///////////////////////////////////
+    @property
+    def edit_url(self):
+     return reverse('project.edit', args=[self.id])
+# ///////////////////////////////////
+    
+    @property
+    def delete_url(self):
+     return reverse('project.delete', args=[self.id])  
+# ///////////////////////////////
+
 
     @staticmethod
     def get_all_projects():
