@@ -16,14 +16,43 @@ from .models import *
 
 @login_required
 def perojects_index(request):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     projects = Project.get_all_projects()
+    context = {
+        'projects':projects,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
     return render(request,'user_projects/allprojects.html',
-                  context={'projects':projects})
+                  context)
 
 @login_required
 def add_project(request):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture  
+    categories = Category.objects.all()       
     # if 'id' in request.session:
-             return render(request, "user_projects/add_project.html", {"categories": Category.objects.all()})
+    context = {
+        'categories': categories,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+    return render(request, "user_projects/add_project.html",context)
     # else:
            # return  redirect('/accounts/login/')
 
@@ -79,8 +108,14 @@ def save_project(request):
 
 
 def project_details(request, _id):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     # Retrieve the project, but exclude reported projects
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
+
     if project_data is None:
         return redirect('some_error_page')
 
@@ -92,16 +127,36 @@ def project_details(request, _id):
     print(relatedProjects)
 
 
-    project_category = Category.objects.get(id=project_data.category_id)
-    project = {"data": project_data, "category": project_category,
-               "total_donate": project_data.donation_set.all().aggregate(Sum('amount')),
-               "rate_sum": project_data.rate_set.all().aggregate(Sum('rate')),
-               "rate_count": project_data.rate_set.all().aggregate(Count('rate')),
-               "tags": project_data.tags.all(),
-               "relatedProjects" :relatedProjects
-               }
+    relatedProjects = Project.objects.all().filter(category_id=project_data.category)
+    data = project_data
+    category = Category.objects.get(id=project_data.category_id)
+    total_donate = project_data.donation_set.all().aggregate(Sum('amount'))
+    rate_sum = project_data.rate_set.all().aggregate(Sum('rate'))
+    rate_count = project_data.rate_set.all().aggregate(Count('rate'))
+    tags = project_data.tags.all()
 
-    return render(request, "user_projects/sliderpase.html", project)
+    print(relatedProjects)
+    if project_data is None:
+        return redirect('some_error_page')
+
+    context = {
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        },
+        "data": data,
+        "category":category,
+        "total_donate": total_donate,
+        "rate_sum": rate_sum ,
+        "rate_count":rate_count,
+        "tags": tags,
+        "relatedProjects" :relatedProjects
+    }
+
+
+    return render(request, "user_projects/sliderpase.html",context)
 
 
 def add_comment(request):
@@ -179,22 +234,46 @@ def report_project(request ):
 
 
 def user_projects(request, user_id):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     try:
         user = User.objects.get(id=user_id)
         projects = Project.objects.filter(user=user)
-        return render(request, "projects/myprojects.html", {"projects": projects})
+        context = {
+        "projects": projects,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+        return render(request, "projects/myprojects.html", {})
     except User.DoesNotExist:
         return HttpResponse("User does not exist", status=400)
 
 def user_donations(request, user_id):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     try:
         user = User.objects.get(id=user_id)
         donations = Donation.objects.filter(user=user)
-
-        for donation in donations:
-            print(f"Donation ID: {donation.id}, Amount: {donation.amount}, Project: {donation.project_id.project_title}, Date: {donation.created_at}")
-
-        return render(request, "projects/user_donations.html", {"donations": donations})
+        context = {
+        "donations": donations,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+        return render(request, "projects/user_donations.html", context)
     except User.DoesNotExist:
         return HttpResponse("User does not exist", status=400)
 

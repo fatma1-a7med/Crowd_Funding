@@ -57,6 +57,9 @@ def profile_view(request):
 def update_profile(request):
     current_user = request.user
     profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
 
     if request.method == 'POST':
         form = ProfileUpdateForm(request.POST, request.FILES, instance=profile)
@@ -65,10 +68,16 @@ def update_profile(request):
             return HttpResponseRedirect(reverse('account.profile'))
     else:
         form = ProfileUpdateForm(instance=profile)
-
     context = {
         'form': form,
-    }
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }    
+
     if form.errors:
         context['errors'] = form.errors 
 
@@ -77,6 +86,11 @@ def update_profile(request):
 
 @login_required
 def delete_account(request):
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     if request.method == 'POST':
         password_form = PasswordVerificationForm(request.POST)
         if password_form.is_valid():
@@ -90,7 +104,16 @@ def delete_account(request):
                 messages.error(request, 'Incorrect password. Please try again.')
     else:
         password_form = PasswordVerificationForm()
-    return render(request, 'accounts/delete_account_confirm.html', {'password_form': password_form})
+        context = {
+        'password_form': password_form,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+    return render(request, 'accounts/delete_account_confirm.html', context)
 
 
 def index(request):

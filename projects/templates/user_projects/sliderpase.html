@@ -104,9 +104,33 @@
                             <p class="card-text">{{ reply.content }}</p>
                         </div>
                     </div>
+
                 {% empty %}
                     <p>No replies yet.</p>
                 {% endfor %}
+
+                    <h3 class="m-4">Comments</h3>
+                {% for comment in data.comment_set.all %}
+                 {% if not comment.is_reported %}
+                        <div class="card m-3">
+                          <div class="card-body">
+                              {% if comment.user.profile.profile_picture %}
+                              <img id="profile_picture" src="{{ comment.user.profile.profile_picture.url }}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+                              {% else %}
+                           <img id="profile_picture" src="{% static 'user_projects/images/profile1.jpg' %}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+
+                  {% endif %}
+
+        <h5 class="card-title">{{ comment.user.first_name}} {{comment.user.last_name}}</h5>
+        <p class="card-text">{{ comment.content }}</p>
+                               {% for reply in comment.replies.all %}
+
+                                             <h5 class="card-title">{{ reply.user.first_name}} {{reply.user.last_name}}</h5>
+                                              <p class="card-text">{{ reply.content }}</p>
+                              {% empty %}
+                                  <p>No replies yet.</p>
+                               {% endfor %}
+
                 <form action="/projects/comment/replay" method="post">
                     {% csrf_token %}
                     <input type="hidden" name="comment_id" value="{{ comment.id }}">
@@ -126,6 +150,7 @@
     {% endif %}
 {% endfor %}
 
+
                 <form action="/projects/comments/add" method="post">
                     {% csrf_token %}
                     <div class="form-group">
@@ -135,6 +160,17 @@
                     <input type="hidden" name="id" value="{{ data.id }}">
                     <button type="submit" class="btn btn-primary">Add Comment</button>
                 </form>
+
+                    <form action="/projects/comments/add" method="post">
+                        {% csrf_token %}
+                        <div class="form-group m-3">
+                            <label for="content">Comment</label>
+                            <textarea class="form-control" name="content" rows="3"></textarea>
+                        </div>
+                        <input type="hidden" name="id" value="{{ data.id }}">
+                        <button type="submit" class="btn btn-primary m-3">Add Comment</button>
+                    </form>
+
 
             </div>
             {% if data.total_target|sub:total_donate.amount__sum > data.total_target|div:4 %}
