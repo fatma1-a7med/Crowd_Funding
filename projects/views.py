@@ -78,14 +78,18 @@ def save_project(request):
         return render(request, "user_projects/add_project.html")
 
 
-
 def project_details(request, _id):
     # Retrieve the project, but exclude reported projects
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
-    relatedProjects = Project.objects.all().filter(category_id=project_data.category)
-    print(relatedProjects)
     if project_data is None:
         return redirect('some_error_page')
+
+    # relatedProjects = Project.objects.all().filter(category_id=project_data.category)
+    relatedProjects = Project.objects.filter(tags__in=project_data.tags.all()) \
+                           .exclude(id=project_data.id) \
+                           .annotate(tag_count=Count('tags')) \
+                           .order_by('-tag_count')[:4]
+    print(relatedProjects)
 
 
     project_category = Category.objects.get(id=project_data.category_id)
@@ -219,6 +223,7 @@ def delete_project(request, id):
         else:
 
             return HttpResponseForbidden("Not allowed")
+
 
 
 
