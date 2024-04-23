@@ -10,6 +10,8 @@ from decimal import Decimal, ROUND_HALF_UP
 from django.db.models import Q, Avg, Sum,F
 from django.contrib.auth.decorators import login_required
 from .models import *
+from projects.forms import ProjectForm
+
 
 
 
@@ -304,6 +306,37 @@ def delete_project(request, id):
         else:
 
             return HttpResponseForbidden("Not allowed")
+        
+
+
+# ////////////////////////////////////////////
+
+def project_show(request,id):
+    project = get_object_or_404(Project, pk=id)
+    return render(request,'user_projects/sliderpase.html',
+                  context={'project':project})
+
+
+def project_edit(request, id):
+    project = get_object_or_404(Project, pk=id)
+    form = ProjectForm(instance=project)
+    if request.method == "POST":
+        form = ProjectForm(request.POST, request.FILES, instance=project)
+        if form.is_valid():
+            form.save()
+            return redirect('projects.index')
+    return render(request, 'projects/edit.html', {'form': form, 'project': project})
+
+
+
+def project_delete(request, id):
+    project = get_object_or_404(Project, pk=id)
+    project.delete()
+    # return HttpResponse("project deleted")
+    return redirect(reverse("projects.index"))
+
+
+
 
 
 
