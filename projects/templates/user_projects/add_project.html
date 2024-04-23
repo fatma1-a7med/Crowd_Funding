@@ -17,19 +17,19 @@
                     id="inputTitle"
                     placeholder="Project Title"
                     required
+
                 />
                 <small id="titleError" class="form-text text-danger"></small>
             </div>
 
             <div class="form-row">
                 <div class="form-group col-md-6">
-                    <label for="inputPassword4">Category</label>
+                    <label for="category">Category</label>
                     <select
                         id="category"
                         name="project_category"
                         class="form-control"
-                        required
-                    >
+                        required>
                         <option selected>Choose...</option>
                         {% for cat in categories %}
                         <option value="{{cat.id}}">{{cat.name}}</option>

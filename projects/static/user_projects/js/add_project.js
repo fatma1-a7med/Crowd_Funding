@@ -128,19 +128,3 @@ function enableSubmit() {
     }
 }
 
-/* Comment Ajax Call */
-// $("#reply").on("click", function() {
-//     $.ajax({
-//         url: "http://localhost:8000/comments/reply",
-//         method: "post",
-//         contentType: "Application/json",
-//         data: JSON.stringify($("#replyForm").serialize()),
-//         dataType: "text",
-//         success(data) {
-//             console.log("ok");
-//         },
-//         error(error) {
-//             console.log(error);
-//         }
-//     });
-// });

@@ -1,8 +1,10 @@
 {% extends "layouts/base.html" %}
 {% block title %}All Projects{% endblock %}
 {% block content %}
+ <a href="{% url 'createProject' %}" class="btn float-end"style="background-color: #4F4557;color:white ">Add new project</a>
     <div class="container">
         <h1 class="my-5 mb-4">All Projects</h1>
+
         <div class="row">
             {% for project in projects %}
             <div class="col-md-4 mb-4">
@@ -15,7 +17,7 @@
                             <img height="350px" class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
                         </div>
                         {% empty %}
-                        <p><h2>No Images for this project yet.</h2></p>
+                        <p><h5>No Images for this project yet.</h5></p>
                         {% endfor %}
                     </div>
                     <a class="carousel-control-prev" href="#carousel_{{ project.id }}" role="button" data-slide="prev">
@@ -30,14 +32,8 @@
                 <div class="card-body text-center">
                         <h5 class="card-title">Project Title: {{ project.project_title }}</h5>
                         <p class="card-text">Description: {{ project.project_details }}</p>
-                        <p class="card-text">Target: ${{ project.total_target }}</p>
-                        <p class="card-text">Start Time: {{ project.start_time }}</p>
-                        <p class="card-text">End Time: {{ project.end_time }}</p>
-                        <p class="card-text">Category: {{ project.category }}</p>
-                        <p class="card-text">Created At: {{ project.created_at }}</p>
-                        {% if project.is_reported %}
-                        <span class="badge badge-warning">Reported</span>
-                        {% endif %}
+
+                       <a href="{% url 'projectDetails' project.id %}" class="btn"style="background-color: #4F4557;color:white ">More Details</a>
                     </div>
                 </div>
             </div>
