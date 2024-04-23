@@ -11,7 +11,8 @@ from django.db.models import Q, Avg, Sum,F
 from django.contrib.auth.decorators import login_required
 from .models import *
 from projects.forms import ProjectForm
-
+from django.urls import reverse
+from django.contrib import messages
 
 
 
@@ -108,30 +109,79 @@ def save_project(request):
         # Handle GET request (if applicable)
         return render(request, "user_projects/add_project.html")
 
-
+@login_required
+# def project_details(request, _id):
+#     current_user = request.user
+#     profile = current_user.profile
+#     user_id = current_user.id
+#     user_name = current_user.username
+#     profile_picture = profile.profile_picture
+#     project_data = Project.objects.filter(id=_id, is_reported=False).first()
+#
+#     if project_data is None:
+#         return redirect('some_error_page')
+#
+#
+#     relatedProjects = Project.objects.filter(tags__in=project_data.tags.all()) \
+#                            .exclude(id=project_data.id) \
+#                            .annotate(tag_count=Count('tags')) \
+#                            .order_by('-tag_count')[:4]
+#
+#     print(relatedProjects)
+#     print(project_data.id)
+#
+#
+#     relatedProjects = Project.objects.all().filter(category_id=project_data.category)
+#     data = project_data
+#     category = Category.objects.get(id=project_data.category_id)
+#     total_donate = project_data.donation_set.all().aggregate(Sum('amount'))
+#     rate_sum = project_data.rate_set.all().aggregate(Sum('rate'))
+#     rate_count = project_data.rate_set.all().aggregate(Count('rate'))
+#     tags = project_data.tags.all()
+#
+#     print(relatedProjects)
+#     if project_data is None:
+#         return redirect('some_error_page')
+#
+#     context = {
+#         'userData': {
+#             'user_id': user_id,
+#             'username': user_name,
+#             'profile_picture': profile_picture,
+#
+#         },
+#         "data": data,
+#         "category":category,
+#         "total_donate": total_donate,
+#         "rate_sum": rate_sum ,
+#         "rate_count":rate_count,
+#         "tags": tags,
+#         "relatedProjects" :relatedProjects
+#     }
+#
+#
+#     return render(request, "user_projects/projectdata.html",context)
 def project_details(request, _id):
     current_user = request.user
     profile = current_user.profile
     user_id = current_user.id
     user_name = current_user.username
     profile_picture = profile.profile_picture
-    # Retrieve the project, but exclude reported projects
     project_data = Project.objects.filter(id=_id, is_reported=False).first()
 
     if project_data is None:
         return redirect('some_error_page')
 
+    project_id = project_data.id
 
     relatedProjects = Project.objects.filter(tags__in=project_data.tags.all()) \
-                           .exclude(id=project_data.id) \
-                           .annotate(tag_count=Count('tags')) \
-                           .order_by('-tag_count')[:4]
+                               .exclude(id=project_id) \
+                               .annotate(tag_count=Count('tags')) \
+                               .order_by('-tag_count')[:4]
 
-    print(relatedProjects)
-    print(project_data.id)
+    relatedProjects = Project.objects.all().filter(category_id=project_data.category) \
+                               .exclude(id=project_id)
 
-
-    relatedProjects = Project.objects.all().filter(category_id=project_data.category)
     data = project_data
     category = Category.objects.get(id=project_data.category_id)
     total_donate = project_data.donation_set.all().aggregate(Sum('amount'))
@@ -139,16 +189,12 @@ def project_details(request, _id):
     rate_count = project_data.rate_set.all().aggregate(Count('rate'))
     tags = project_data.tags.all()
 
-    print(relatedProjects)
-    if project_data is None:
-        return redirect('some_error_page')
-
     context = {
         'userData': {
             'user_id': user_id,
             'username': user_name,
             'profile_picture': profile_picture,
-            
+
         },
         "data": data,
         "category":category,
@@ -159,9 +205,9 @@ def project_details(request, _id):
         "relatedProjects" :relatedProjects
     }
 
-
     return render(request, "user_projects/projectdata.html",context)
 
+@login_required
 
 def add_comment(request):
     if request.method == "POST":
@@ -169,7 +215,7 @@ def add_comment(request):
         user_id = request.user.id
         Comment(user_id=user_id,project_id=project, content=request.POST["content"]).save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
+@login_required
 def add_reply(request):
     if request.method == "POST":
         comment = Comment.objects.get(id=request.POST["comment_id"])
@@ -179,29 +225,59 @@ def add_reply(request):
 
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+# @login_required
+# def add_donation(request):
+#     project_id = request.POST.get("id")
+#     amount = request.POST.get("amount")
+#
+#     if project_id and amount:
+#         project = Project.objects.get(id=project_id)
+#         user_id = request.user.id  # Fetching user ID from session
+#
+#         # Check if the user has already donated to this project
+#         donation = Donation.objects.filter(project_id=project, user_id=user_id).first()
+#
+#         if donation:
+#             # If user has already donated, update the existing donation amount
+#             donation.amount += int(amount)
+#             donation.save()
+#         else:
+#             # If user hasn't donated yet, create a new donation record
+#             Donation.objects.create(project_id=project, user_id=user_id, amount=int(amount))
+#
+#     return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def add_donation(request):
     project_id = request.POST.get("id")
     amount = request.POST.get("amount")
-    
+
     if project_id and amount:
         project = Project.objects.get(id=project_id)
         user_id = request.user.id  # Fetching user ID from session
-        
-        # Check if the user has already donated to this project
-        donation = Donation.objects.filter(project_id=project, user_id=user_id).first()
 
-        if donation:
-            # If user has already donated, update the existing donation amount
-            donation.amount += int(amount)
-            donation.save()
+        # Calculate total amount donated for the project
+        total_donation_amount = Donation.objects.filter(project_id=project_id).aggregate(total_amount=Sum('amount'))[
+                                    'total_amount'] or 0
+
+
+        if total_donation_amount + int(amount) >= project.total_target:
+            messages.error(request, "Donation amount exceeds total target amount.")
         else:
-            # If user hasn't donated yet, create a new donation record
-            Donation.objects.create(project_id=project, user_id=user_id, amount=int(amount))
 
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            donation = Donation.objects.filter(project_id=project, user_id=user_id).first()
 
+            if donation:
+                # If user has already donated, update the existing donation amount
+                donation.amount += int(amount)
+                donation.save()
+            else:
+                # If user hasn't donated yet, create a new donation record
+                Donation.objects.create(project_id=project, user_id=user_id, amount=int(amount))
 
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', reverse('projects.index')))
+
+@login_required
 def rate_project(request):
     if request.method == "POST":
         project = Project.objects.get(id=request.POST["id"])
@@ -213,7 +289,7 @@ def rate_project(request):
             Rate.objects.filter(user_id=user_id,project_id=project).update(rate=request.POST["rate"])
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-
+@login_required
 def report_comment(request):
     if request.method == "POST":
         print(request.POST, 'fffff')
@@ -225,7 +301,7 @@ def report_comment(request):
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 
-
+@login_required
 def report_project(request ):
     if request.method == "POST":
         # print(request.POST, "sssss")
@@ -236,7 +312,7 @@ def report_project(request ):
         project.save()
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
-
+@login_required
 def user_projects(request, user_id):
     current_user = request.user
     profile = current_user.profile
@@ -245,7 +321,9 @@ def user_projects(request, user_id):
     profile_picture = profile.profile_picture
     try:
         user = User.objects.get(id=user_id)
+        print(user)
         projects = Project.objects.filter(user=user)
+        print(projects)
         context = {
         "projects": projects,
         'userData': {
@@ -255,7 +333,7 @@ def user_projects(request, user_id):
             
         }
     }
-        return render(request, "projects/myprojects.html", {})
+        return render(request, "projects/myprojects.html",context)
     except User.DoesNotExist:
         return HttpResponse("User does not exist", status=400)
 
@@ -285,7 +363,20 @@ def user_donations(request, user_id):
 
 
 def some_error_page(request):
-    return render(request, 'error_page.html')
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
+    context = {
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+    return render(request, 'error_page.html',context)
 
 
 
@@ -320,12 +411,30 @@ def project_show(request,id):
 def project_edit(request, id):
     project = get_object_or_404(Project, pk=id)
     form = ProjectForm(instance=project)
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
             form.save()
-            return redirect('projects.index')
-    return render(request, 'projects/edit.html', {'form': form, 'project': project})
+            return redirect(f"/projects/{project.id}")
+        else:
+         form = ProjectForm(instance=project)
+    context = {
+         'form': form,
+         'project': project,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }     
+ 
+    return render(request, 'projects/edit.html', context)
 
 
 

@@ -29,14 +29,13 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('projects/', include('projects.urls')),
-
     # path('categories/add', projects.add_category),
    path('categories/', include('categories.urls')),
    path('accounts/', include('django.contrib.auth.urls')),
    path('accounts/', include('accounts.urls')),
-   path('home/', include('home.urls')),
+   path('', include('home.urls')),
    path('superuser/', include('superuser.urls')),
-   path('superuser/', include('django.contrib.auth.urls')),
+   #path('superuser/', include('django.contrib.auth.urls')),
 
 
 

@@ -27,7 +27,7 @@ def superuser_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return redirect('index')
+            return redirect('index.superuser')
         else:
             print ('login is required')
             pass
@@ -174,10 +174,10 @@ def add_reply(request):
             comment = get_object_or_404(Comment, id=comment_id)
             user = request.user
             Reply(user=user, comment=comment, content=form.cleaned_data["content"]).save()
-            return HttpResponseRedirect ('show_comments')  
+            # Redirect to the show_comments page for the relevant project
+            return redirect('show_comments', project_id=comment.project_id.id)  
     else:
         form = ReplyForm()
-
     return render(request, 'crud/projects/add_reply.html', {'form': form})
 
 
@@ -200,9 +200,9 @@ def toggle_featured(request, project_id):
         project = get_object_or_404(Project, id=project_id)
         project.featured = not project.featured
         project.save()
-        return redirect('index')
+        return redirect('index.superuser')
     else:
-        return redirect('index')
+        return redirect('index.superuser')
     
     
   

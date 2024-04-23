@@ -8,7 +8,7 @@ from superuser.views import category_create,category_delete,category_show
 
 urlpatterns = [
     path('log_in/', superuser_login, name='superuser_login'),
-    path('index/', admin_view, name='index'),
+    path('index/', admin_view, name='index.superuser'),
     path('user_list/', user_list, name='user_list'),
     path('user_delete/<int:user_id>/', user_delete, name="user_delete"),
 
