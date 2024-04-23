@@ -79,12 +79,35 @@ def category_show(request,id):
                   context)
 
 
+
+
+
+# def category_show(request,id):
+#     current_user = request.user
+#     # profile = current_user.profile
+#     user_id = current_user.id
+#     user_name = current_user.username
+#     # profile_picture = profile.profile_picture
+#     category = get_object_or_404(Category, pk=id)
+#     context = {
+#         'category':category,
+#         'userData': {
+#             'user_id': user_id,
+#             'username': user_name,
+#         #     'profile_picture': profile_picture,
+            
+#         }
+#     }
+#     return render(request,'crud/categories/show.html',
+#                   context)
+
+
 def category_edit(request, id):
     current_user = request.user
-    profile = current_user.profile
+    # profile = current_user.profile
     user_id = current_user.id
     user_name = current_user.username
-    profile_picture = profile.profile_picture
+    # profile_picture = profile.profile_picture
     category = get_object_or_404(Category, pk=id)
     form = CategoryModelForm(instance=category)
     if request.method == "POST":
@@ -98,7 +121,7 @@ def category_edit(request, id):
         'userData': {
             'user_id': user_id,
             'username': user_name,
-            'profile_picture': profile_picture,
+            # 'profile_picture': profile_picture,
             
         }
     }    

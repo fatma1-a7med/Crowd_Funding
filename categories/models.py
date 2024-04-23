@@ -36,18 +36,22 @@ class Category(models.Model):
      return get_list_or_404(Category, pk=id)
 
     
+    # @property
+    # def show_url(self):
+    #  return reverse("category_show", args= [self.id])    
+    
     @property
     def show_url(self):
      return reverse("categories.show", args= [self.id])    
     
     @property
     def delete_url(self):
-     return reverse('category.delete', args=[self.id])  
+     return reverse('category_delete', args=[self.id])  
     
 
     @property
     def edit_url(self):
-     return reverse('category.edit', args=[self.id])
+     return reverse('category_edit', args=[self.id])
     
 
 

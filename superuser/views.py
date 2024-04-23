@@ -15,7 +15,7 @@ from projects.forms import *
 # from projects.forms import ProjectForm, ImageForm
 # from projects.forms import CommentForm, ReplyForm
 from categories.models import *
-from categories.forms import *
+from categories.forms import CategoryModelForm
 
 
 def superuser_login(request):
@@ -212,7 +212,7 @@ def categories_index(request):
     categories = Category.get_all_categories()
     return render(request, 'crud/categories/index.html', {'categories': categories})
 
-
+# create_category
     
 def category_create(request):
     if request.method == 'POST':
@@ -226,22 +226,33 @@ def category_create(request):
                    {'form': form})
 
 
+# def category_create(request):
+#     if request.method == 'POST':
+#         form = CategoryModelForm(request.POST)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('categories_index')  # Change this to your desired URL after category creation
+#     else:
+#         form = CategoryModelForm()
+#     return render(request, 'category_create.html', {'form': form})
+
+
 
 def category_show(request,id):
     current_user = request.user
-    profile = current_user.profile
+    # profile = current_user.profile
     user_id = current_user.id
     user_name = current_user.username
-    profile_picture = profile.profile_picture
+    # profile_picture = profile.profile_picture
     category = get_object_or_404(Category, pk=id)
     context = {
         'category':category,
-        # 'userData': {
-        #     'user_id': user_id,
-        #     'username': user_name,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
         #     'profile_picture': profile_picture,
             
-        # }
+        }
     }
     return render(request,'crud/categories/show.html',
                   context)
@@ -249,10 +260,10 @@ def category_show(request,id):
 
 def category_edit(request, id):
     current_user = request.user
-    profile = current_user.profile
+    # profile = current_user.profile
     user_id = current_user.id
     user_name = current_user.username
-    profile_picture = profile.profile_picture
+    # profile_picture = profile.profile_picture
     category = get_object_or_404(Category, pk=id)
     form = CategoryModelForm(instance=category)
     if request.method == "POST":
@@ -263,14 +274,36 @@ def category_edit(request, id):
     context = {
         'form': form,
         'category': category,
-        # 'userData': {
-        #     'user_id': user_id,
-        #     'username': user_name,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
         #     'profile_picture': profile_picture,
             
-        # }
+        }
     }    
     return render(request, 'crud/categories/edit.html', context)
+
+
+
+
+# def category_edit(request, id):
+#     category = get_object_or_404(Category, pk=id)
+#     form = CategoryModelForm(instance=category)
+    
+#     if request.method == "POST":
+#         form = CategoryModelForm(request.POST, request.FILES, instance=category)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('categories_index')
+    
+#     context = {
+#         'form': form,
+#         'category': category,
+#     }
+    
+#     return render(request, 'crud/categories/edit.html', context)
+
+
 
 
 def category_delete(request, id):

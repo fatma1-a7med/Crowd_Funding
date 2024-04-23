@@ -136,8 +136,12 @@ class Category(models.Model):
      return reverse("categories_index", args= [self.id]) 
     
     @property
+    def create_url(self):
+     return reverse("category_create", args= [self.id]) 
+    
+    @property
     def show_url(self):
-     return reverse("categories_show", args= [self.id])    
+     return reverse("category_show", args= [self.id])    
     
     @property
     def delete_url(self):
