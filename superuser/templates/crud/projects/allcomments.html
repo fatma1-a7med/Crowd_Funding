@@ -41,8 +41,8 @@
             background-color: #555;
         }
     </style>
-    <h1>All Comments</h1>
-    <a href="{% url 'add_comment' project.id %}" class="btn btn-dark"> Add comment </a>
+    <h2 class="my-3" style="color: #4F4557;">All Comments</h2>
+    <a href="{% url 'add_comment' project.id %}" class="btn text-light" style="background-color: #4F4557;"> Add comment </a>
 
 
     <div class="comment-container">
@@ -51,7 +51,7 @@
                 <p class="content">{{ comment.content }}</p>
                 <p class="content">Is reported: {{ comment.is_reported }}</p>
                 <p class="author">Author: {{ comment.user }}</p>
-                <a href="{% url 'all_replies' project.id  %}" class="btn btn-dark">Show Replies</a>
+                <a href="{% url 'all_replies' project.id  %}" class="btn text-light" style="background-color: #4F4557;">Show Replies</a>
                 <form action="{% url 'delete_comment' comment.id project.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="delete-btn">Delete</button>

@@ -174,10 +174,10 @@ def add_reply(request):
             comment = get_object_or_404(Comment, id=comment_id)
             user = request.user
             Reply(user=user, comment=comment, content=form.cleaned_data["content"]).save()
-            return HttpResponseRedirect ('show_comments')  
+            # Redirect to the show_comments page for the relevant project
+            return redirect('show_comments', project_id=comment.project_id.id)  
     else:
         form = ReplyForm()
-
     return render(request, 'crud/projects/add_reply.html', {'form': form})
 
 

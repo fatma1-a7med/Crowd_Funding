@@ -37,7 +37,7 @@
 {% comment %} ////////////////////////////////////{% endcomment %}
                 <div class="card-body text-center">
                 <h5 class="card-title"style="margin-bottom: 12px;" >{{ project.project_title }}</h5>
-                <a href="{{ project.show_url }}" class="btn btn-primary"> Show More </a>
+                <a href="{% url 'projectDetails' project.id %}" class="btn" style="background-color: #4F4557;color:white ">More Details</a>
                
 
             </div>

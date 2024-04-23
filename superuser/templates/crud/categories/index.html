@@ -1,9 +1,9 @@
-b{% extends "layout/bases.html" %}
+{% extends "layout/bases.html" %}
 {% load static %}
 {% block title %} Categories {% endblock %}
 
 {% block content %}
-<h1> All Categories </h1>
+<h2 class="my-3" style="color: #4F4557;"> All Categories </h2>
 
 <style>
     .table {
@@ -12,12 +12,12 @@ b{% extends "layout/bases.html" %}
         margin-top: 20px;
     }
     .table th, .table td {
-        border: 1px solid #ddd;
+        border: 1px solid #aaaaaa;
         padding: 8px;
         text-align: left;
     }
     .table th {
-        background-color: #e6f7ff; /* Light blue background */
+        background-color: #ddd; /* Light blue background */
     }
     .table img {
         max-width: 200px;
@@ -34,7 +34,7 @@ b{% extends "layout/bases.html" %}
         background-color: #007bff; /* Darker blue background on hover */
     }
 </style>
-<h1 style="text-align: center;">All Categories</h1>
+
 {% comment %} <button href='{% url "category_create" %}' class="brn btn-dark"> Create category </button> {% endcomment %}
 <table class="table">
     <tr>

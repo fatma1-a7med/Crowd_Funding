@@ -41,15 +41,14 @@
             background-color: #555;
         }
     </style>
-    <h1>All Replies</h1>
-    <a href="{% url 'add_reply' %}" class="btn btn-dark"> Add reply </a>
+    <h2 class="my-3" style="color: #4F4557;">All Replies</h2>
+    <a href="{% url 'add_reply' %}" class="btn text-light" style="background-color: #4F4557;"> Add reply </a>
     <div class="comment-container">
         {% for reply in replies %}
             <div class="comment">
-                <p class="content">Content: {{ reply.content }}</p>
-                <p class="content">Comment: {{ reply.comment }}</p>
+                <p class="content">Reply: {{ reply.content }}</p>
                 <p class="author">Author: {{ reply.user }}</p>
-                <form action="{% url 'delete_reply' reply.id comment_id=comment.id %}" method="post">
+                <form action="{% url 'delete_reply' reply.id reply.comment.id %}" method="post">
                     {% csrf_token %}
                     <button type="submit" class="delete-btn">Delete</button>
                 </form>

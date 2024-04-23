@@ -3,10 +3,8 @@
 
 {% block content %}
 
-<div class="container-fluid">
-    <h1 class="mt-4">Users</h1>
-    <p>All Users:</p>
-    <table class="table">
+    <h2 class="mt-4" style="color: #4F4557;">Users</h2>
+    <table class="table table-striped ">
         <thead>
             <tr>
                 <th scope="col">Username</th>
@@ -28,12 +26,13 @@
                 <td>{{ profile.facebook_profile }}</td>
                 <td>{{ profile.country }}</td>
                 <td>
+
                     <a href="{% url 'user_delete' profile.user.id %}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>
             {% endfor %}
         </tbody>
     </table>
-</div>
+</d>
 
 {% endblock %}
