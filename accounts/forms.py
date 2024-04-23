@@ -4,6 +4,10 @@ from django.contrib.auth.models import User
 from accounts.models import Profile
 from django.core.exceptions import ValidationError
 
+from django import forms
+from django.core.exceptions import ValidationError
+from .models import Profile
+
 
 class RegisterationForm(UserCreationForm):
     mobile_phone = forms.RegexField(regex=r'^(\+?2?)?01[0-9]{9}$',
@@ -32,10 +36,6 @@ class RegisterationForm(UserCreationForm):
             raise ValidationError("An account with this email address already exists!!")
         return email
     
-from django import forms
-from django.core.exceptions import ValidationError
-from django.contrib.auth.models import User
-from .models import Profile
 
 class ProfileUpdateForm(forms.ModelForm):
     first_name = forms.CharField(max_length=30, required=True)

@@ -50,6 +50,10 @@
             background-color: #4F4557;
             color: #F4EEE0;
         }
+        .sign_up:hover{
+            color: #F4EEE0;
+            
+        }
         .navbar-nav {
             display: flex;
             justify-content: space-between;
@@ -142,7 +146,9 @@
     color:#4F4557;
     font-weight:bold;
 }
+
     </style>
+
 </head>
 <body>
 <nav class="navbar navbar-expand-lg ">
@@ -168,7 +174,7 @@
 
             </ul>
             <form class="d-flex" id="searchForm" method="GET" action="{% url 'home' %}">
-                <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="query">
+                <input class="form-control me-2" type="search" placeholder="Search by title or tag " aria-label="Search" name="query">
                 <button class="btn sign_up mr-5 search" type="submit">Search</button>
             </form>
             {% if user.is_authenticated %}

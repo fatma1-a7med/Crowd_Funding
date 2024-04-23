@@ -1,9 +1,11 @@
 {% extends "layouts/base.html" %}
 {% block title %}All Projects{% endblock %}
 {% block content %}
- <a href="{% url 'createProject' %}" class="btn float-end"style="background-color: #4F4557;color:white ">Add new project</a>
     <div class="container">
-        <h1 class="my-5 mb-4">All Projects</h1>
+        <div class="d-flex justify-content-between my-4">
+            <h1 style="color:#4F4557">All Projects</h1>
+            <a href="{% url 'createProject' %}" class="btn float-end" style="background-color: #4F4557;color:white;height:40px ">Add new project</a>
+        </div>
 
         <div class="row">
             {% for project in projects %}
