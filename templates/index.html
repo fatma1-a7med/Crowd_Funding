@@ -1,13 +1,24 @@
 {% extends 'registration/base.html' %}
+{% load static %}
+
+{% block title %}Activation link Mail{% endblock %}
+
 {% block body %}
+<div class="sign_up_container d-flex"> 
+   <div class="leftSide col-5">
+       <i class="fa-solid fa-quote-left"></i>
+       <h1> Building a Better Future Together! </h1>
+   </div>
+   <div class="rightSide col-7">
+       <img src="{% static 'accounts/images/logo3.svg' %}" width="50" height="50" id="logo"/>
+      
+      {% for message in messages%}
+      <div class="message {{message.tags}} container my-5">
+         <h4> {{message}}<h4>
+      </div>
+      {% endfor %}
 
-{% for message in messages%}
-<div class="message {{message.tags}} container my-5">
-   <h1 class="text-success"> {{message}}<h1>
+    </div>
 </div>
-{% endfor %}
-
-</div>
-
 {%endblock %}
 

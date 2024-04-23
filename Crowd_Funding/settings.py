@@ -101,7 +101,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
-        'PASSWORD': 'root',
+        'PASSWORD': '',
         'HOST': 'localhost',
         'PORT':3306
 
@@ -167,6 +167,7 @@ DEFAULT_FROM_EMAIL = "fatmaalzahraa.ahmed.fathy@gmail.com"
 
 
 LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'login'
 
 AUTHENTICATION_BACKENDS = ['accounts.backends.EmailBackend']
 

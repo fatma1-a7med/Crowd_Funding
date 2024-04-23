@@ -103,6 +103,45 @@
     text-align: center;
   }
 
+  #resetform{
+    margin-top: 100px; 
+    margin-right: auto;
+    margin-left: auto;
+    width:60%
+}
+#restpass_done{
+   margin-top:230px;
+   margin-left:70px
+}
+#restpass_confirm{
+    display:block;
+}
+#restpass_confirm ul:nth-of-type(1){
+    display:none !important
+}
+#restpass_confirm .errorlist, #restpass .errorlist li{
+    display: block;
+    color: red;
+    font-size: 0.9rem;
+}
+#restpass_confirm p:nth-of-type(2){
+    display: none;
+}
+#right_rest_confirm{
+    margin-top:100px;
+    padding-left:100px
+}
+#restpass_confirm .add{
+     width:auto
+}
+#right_reset_complete {
+    margin-top:200px;
+    padding-left:100px
+}
+#right_reset_complete a {
+    color:#4F4557;
+    font-weight:bold;
+}
     </style>
 </head>
 <body>
@@ -135,17 +174,15 @@
             {% if user.is_authenticated %}
             <!-- Display username and logout option -->
             <div class="dropdown">
-                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    <img src="{{userData.profile_picture.url}}" width="40" height="40">
+                <a class="nav-link dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                    <img src="{{ userData.profile_picture.url }}" width="40" height="40">
                     {{ userData.username }}
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                    <li><a class="dropdown-item" href="{% url 'account.profile' %}"> <i
-                            class="fa-regular fa-circle-user"></i> Profile</a></li>
-                    <li><a class="dropdown-item" href="{% url 'logout' %}"><i
-                            class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
+                    <li><a class="dropdown-item" href="{% url 'account.profile' %}" ><i class="fa-regular fa-circle-user"></i> Profile</a></li>
+                    <li><a class="dropdown-item" href="{% url 'logout' %}"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
                 </ul>
+            </div>
                 {% else %}
                 <!-- Display sign-in and sign-up options -->
 
@@ -236,9 +273,6 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
-        crossorigin="anonymous"></script>
 </body>
 
 </html>
