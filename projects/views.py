@@ -260,11 +260,11 @@ def add_donation(request):
         total_donation_amount = Donation.objects.filter(project_id=project_id).aggregate(total_amount=Sum('amount'))[
                                     'total_amount'] or 0
 
-        # Check if the new donation will exceed the total target amount
-        if total_donation_amount + int(amount) > project.total_target:
+
+        if total_donation_amount + int(amount) >= project.total_target:
             messages.error(request, "Donation amount exceeds total target amount.")
         else:
-            # Check if the user has already donated to this project
+
             donation = Donation.objects.filter(project_id=project, user_id=user_id).first()
 
             if donation:

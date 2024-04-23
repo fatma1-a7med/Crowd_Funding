@@ -15,20 +15,6 @@
                             </div>
                             {% endfor %}
                         </div>
-
-
-                  <a class="carousel-control-prev" href="#carouselExampleControls{{ forloop.counter }}" role="button"
-                   data-slide="prev">
-                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Previous</span>
-                </a>
-                <a class="carousel-control-next" href="#carouselExampleControls{{ forloop.counter }}" role="button"
-                   data-slide="next">
-                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                    <span class="sr-only">Next</span>
-                </a>
-                    </div>
-
                         <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
                            data-slide="prev">
                             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
@@ -40,19 +26,18 @@
                             <span class="sr-only">Next</span>
                         </a>
                     </div><br>
-
-                    <h3 class="card-title ">{{ data.project_title }}</h3>
+                    <h3 class="card-title">{{ data.project_title }}</h3>
                     <p class="card-text">{{ data.project_details }}</p>
-                    <p class="card-text m-4">
-                        <strong >Start date:</strong> {{ data.start_time }} <br>
+                    <p class="card-text">
+                        <strong>Start date:</strong> {{ data.start_time }} <br>
                         <strong>End date:</strong> {{ data.end_time }} <br>
                         <strong>Target:</strong> {{ data.total_target }}
                     </p>
-                  
+
                     <tr>
                         <td colspan="2"><strong>Project Category:</strong></td>
                     </tr>
-                 
+
                     <tr>
                         <td colspan="2">
                             <li>{{category.name}}</li>
@@ -71,49 +56,27 @@
 
 
 
-                  <p class="card-text">
-                      <strong>Total Donations:</strong> {{ total_donate.amount__sum }} LE
-                    </p>
-                <form action="/projects/donation/add" method="post" onsubmit="return validateDonation()">
-                    {% csrf_token %}
-                    <label for="">Donation for the project</label>
-                    <input type="hidden" name="id" value="{{ data.id }}">
-                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
-                    <input type="number" min="1" id="donationAmount" name="amount" class="form-control">
-                    <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
-                        Send Donate
-                    </button>
-                </form>
+                   <form action="/projects/donation/add" method="post" onsubmit="return validateDonation()">
+    {% csrf_token %}
+    <label for="">Donation for the project</label>
+    <input type="hidden" name="id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" value="1">
+    <input type="number" min="1" name="amount" id="donationAmount" class="form-control">
+    <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
+        Send Donate
+    </button>
+</form>
 
-
-
-                        <div class="row m-4">
-                            {% load mathfilters %}
-                            <h3>Project Rates: {{ rate_sum.rate__sum|div:rate_count.rate__count|mul:10 }}%</h3>
-                        </div>
-
-                        
-                        <form action="/projects/donation/add" method="post">
-                            {% csrf_token %}
-                            <label for="">Donation for the project</label>
-                            <input type="hidden" name="id" value="{{ data.id }}">
-                            <input type="hidden" name="user_id" value="1">
-                            <input type="number" min="1" name="amount" class="form-control">
-                            <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
-                                Send Donate
-                            </button>
-                        </form>
                         <p class="card-text" style="margin-left:460px;margin-top:-30px">
                             <strong>Total Donations:</strong> {{ total_donate.amount__sum }} LE
                         </p> <br>
-                        
 
                         <form action="/projects/rate" method="post">
                             {% csrf_token %}
                             <label for="rate">Rate this project</label>
                             <input type="hidden" name="id" value="{{ data.id }}">
                             <input type="hidden" name="user_id" value="1">
-                            <input type="number" min="0" name="rate" max="5" class="form-control">
+                            <input type="number" min="0" name="rate" max="10" class="form-control">
                             <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
                                 Rate
                             </button>
@@ -138,12 +101,6 @@
                 {% for reply in comment.replies.all %}
                     <div class="card my-3 ml-4">
                         <div class="card-body">
-
-                {% if reply.user.profile.profile_picture %}
-                    <img id="profile_picture" src="{{ reply.user.profile.profile_picture.url }}" class="rounded-circle" style="width:50px ;hieght:50px"/>
-                {% else %}
-                    <img id="profile_picture" src="{% static 'user_projects/images/profile1.jpg' %}" class="rounded-circle" style="width:50px ;hieght:50px"/>
-                {% endif %}
                             <h5 class="card-title">{{ reply.user.first_name}} {{reply.user.last_name}}</h5>
                             <p class="card-text">{{ reply.content }}</p>
                         </div>
@@ -180,7 +137,7 @@
                     <button type="submit" class="btn sign_up mx-3">Add Comment</button>
                 </form>
                 <br>
-               
+
 
             </div>
             {% if data.total_target|sub:total_donate.amount__sum > data.total_target|div:4 %}
@@ -208,7 +165,7 @@
 <div class="row">
     {% for data in relatedProjects %}
     {% if forloop.counter < 5 %}
-     {% if data.id != project_data.id %}
+    {% if data.id != project.data.id %}
     <div class="col-md-3 mt-5">
         <div class="card cardDes" style="height: 550px;">
             <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel" style="height: 300px;">
@@ -240,7 +197,7 @@
                     <li>{{ tag.tag_name }}</li>
                     {% endfor %}
                 </ul>
-            <a href="{% url 'projectDetails'  data.id %}" class="btn"style="background-color: #4F4557;color:white ">More Details</a>
+
             </div>
         </div>
     </div>
@@ -271,7 +228,7 @@ document.getElementById('delete-btn').addEventListener('click', function() {
 });
 
 
-  function validateDonation() {
+    function validateDonation() {
         var totalDonations = {{ total_donate.amount__sum }};
         var targetAmount = {{ data.total_target }};
         var donationAmount = parseInt(document.getElementById("donationAmount").value);
@@ -298,13 +255,45 @@ document.getElementById('delete-btn').addEventListener('click', function() {
     }
 
 
-
-
 </script>
 
 
-
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
