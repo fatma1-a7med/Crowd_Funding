@@ -1,0 +1,13 @@
+{% extends "layout/bases.html" %}
+{% block title %}
+   Add image
+{% endblock %}
+{% block content %}
+<body>
+    <h1>Add Image</h1>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Upload Image</button>
+    </form>
+{% endblock %}

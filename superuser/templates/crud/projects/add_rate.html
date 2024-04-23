@@ -1,0 +1,14 @@
+{% extends "layout/bases.html" %}
+{% block title %}
+   Add Rate 
+{% endblock %}
+{% block content %}
+    <title>Add Rate</title>
+<body>
+    <h1>Add Rate</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Add Rate</button>
+    </form>
+{% endblock %}

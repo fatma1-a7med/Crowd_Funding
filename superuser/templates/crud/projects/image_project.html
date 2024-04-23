@@ -1,0 +1,65 @@
+{% extends "layout/bases.html" %}
+{% block title %}
+   project images
+{% endblock %}
+{% block content %}
+
+    <style>
+        .image-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+        .image-item {
+            margin: 10px;
+            width: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .image-item img {
+            width: 100%;
+            height: auto;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .image-item .image-details {
+            padding: 10px;
+        }
+        .image-item .image-details h4 {
+            margin: 0;
+        }
+        .image-item .image-details .delete-btn {
+            margin-top: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        .image-item .image-details .delete-btn:hover {
+            background-color: #555;
+        }
+    </style>
+    <h1>Project Images</h1>
+    <a href="{% url 'add_image' project.id %}" class="btn btn-dark"> Add image </a>
+    <div class="image-container">
+        {% for image in images %}
+            <div class="image-item">
+                <img src="{{  image.img.url  }}" alt="Project Image">
+                <div class="image-details">
+                    <h4>Project Image</h4>
+                    <form action="{% url 'delete_image' image.id project.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="delete-btn">Delete</button>
+                    </form>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    {% endblock %}
