@@ -255,7 +255,7 @@ def user_projects(request, user_id):
             
         }
     }
-        return render(request, "projects/myprojects.html", {})
+        return render(request, "projects/myprojects.html",context)
     except User.DoesNotExist:
         return HttpResponse("User does not exist", status=400)
 
@@ -333,12 +333,30 @@ def project_show(request,id):
 def project_edit(request, id):
     project = get_object_or_404(Project, pk=id)
     form = ProjectForm(instance=project)
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
     if request.method == "POST":
         form = ProjectForm(request.POST, request.FILES, instance=project)
         if form.is_valid():
             form.save()
-            return redirect('projects.index')
-    return render(request, 'projects/edit.html', {'form': form, 'project': project})
+            return redirect(f"/projects/{project.id}")
+        else:
+         form = ProjectForm(instance=project)
+    context = {
+         'form': form,
+         'project': project,
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }     
+ 
+    return render(request, 'projects/edit.html', context)
 
 
 

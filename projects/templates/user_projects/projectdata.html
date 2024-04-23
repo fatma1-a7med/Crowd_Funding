@@ -11,7 +11,7 @@
                         <div class="carousel-inner">
                             {% for image in data.images_set.all %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                                <img height="400px" class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
                             </div>
                             {% endfor %}
                         </div>
@@ -166,12 +166,12 @@
     {% if forloop.counter < 5 %}
     {% if data.id != project.data.id %}
     <div class="col-md-3 mt-5">
-        <div class="card cardDes">
-            <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel">
+        <div class="card cardDes" style="height: 550px;">
+            <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel" style="height: 300px;">
                 <div class="carousel-inner">
                     {% for image in data.images_set.all %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                        <img height="300px" class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
                     </div>
                     {% endfor %}
                 </div>

@@ -51,7 +51,7 @@ INSTALLED_APPS = [
     'categories.apps.CategoriesConfig',
     'home.apps.HomeConfig',
     'superuser.apps.SuperuserConfig',
-
+    
     'crispy_forms',
     'taggit',
     'crispy_bootstrap4',
@@ -103,7 +103,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'crowdfunding',
         'USER': 'root',
-        'PASSWORD': '',
+        'PASSWORD': '3468',
         'HOST': 'localhost',
         'PORT':3306
 

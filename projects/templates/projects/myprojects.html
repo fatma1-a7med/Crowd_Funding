@@ -3,9 +3,9 @@
 
 {% block content %}
 <div class="container">
-    <div class="card cafe-background"> <!-- Added custom class 'cafe-background' -->
+    <div class="card cafe-background"> 
         <div class="card-body" >
-            <h1>User Projects</h1>
+            <h2 style="color: #4F4557;">User Projects</h2>
             <div class="row my-5">
                 <div class="col-md-12">
                     <ul class="nav nav-tabs" id="myTab" role="tablist" style="background-color: #4F4557;">
@@ -19,20 +19,40 @@
                   </div>
                   <div class="row">
                     {% if projects %}
-                {% for project in projects %}
+                    {% for project in projects %}
                     <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title"><strong>Title: </strong>{{ project.project_title }}</h5>
+                        <div class="card" style="height: 500px;">
+                            
+                              <div id="carousel_{{ project.id }}" class="carousel slide" data-ride="carousel" style="height: 300px;">
+                                 <div class="carousel-inner">
+                                {% for image in project.images_set.all %}
+                                <div class="carousel-item {% if forloop.first %}active{% endif %}">
+                                    <img height="300px" class="d-block w-100" src="{{ image.img.url }}" alt="Slide">
+                                </div>
+                                {% empty %}
+                                <p><h5>No Images for this project yet.</h5></p>
+                                {% endfor %}
                             </div>
-                            <div class="card-body">
-                                <p class="card-text"><strong>Details: </strong>{{ project.project_details }}</p>
-                                <p class="card-text"><strong>Start Date:</strong> {{ project.start_time }}</p>
-                                <p class="card-text"><strong>End Date:</strong> {{ project.end_time }}</p>
+                            <a class="carousel-control-prev" href="#carousel_{{ project.id }}" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel_{{ project.id }}" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <div class="card-body text-center">
+                                <h5 class="card-title">Project Title: {{ project.project_title }}</h5>
+                                <p class="card-text">Description: {{ project.project_details }}</p>
+        
+                               <a href="{% url 'projectDetails' project.id %}" class="btn" style="background-color: #4F4557;color:white ">More Details</a>
+                               <a href="{% url 'project.edit' project.id %}" class="btn btn-primary">Update</a>
+
                             </div>
                         </div>
                     </div>
-                {% endfor %}
+                    {% endfor %}
                 {% else %}
                     <div class="col-md-12">
                         <p class="alert alert-warning">This user has no projects yet.</p>
