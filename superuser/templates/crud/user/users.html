@@ -1,0 +1,40 @@
+{% extends 'layout/bases.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container-fluid">
+    <h1 class="mt-4">Users</h1>
+    <p>All Users:</p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">Username</th>
+                <th scope="col">Email</th>
+                <th scope="col">Mobile Phone</th>
+                <th scope="col">Birthdate</th>
+                <th scope="col">Facebook Profile</th>
+                <th scope="col">Country</th>
+                <th scope="col">Actions</th> 
+            </tr>
+        </thead>
+        <tbody>
+            {% for profile in profiles %}
+            <tr>
+                <td>{{ profile.user.username }}</td>
+                <td>{{ profile.user.email }}</td>
+                <td>{{ profile.mobile_phone }}</td>
+                <td>{{ profile.birthdate }}</td>
+                <td>{{ profile.facebook_profile }}</td>
+                <td>{{ profile.country }}</td>
+                <td>
+                    <a href="{% url 'user_update' profile.user.id %}" class="btn btn-primary">Update</a>
+                    <a href="{% url 'user_delete' profile.user.id %}" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

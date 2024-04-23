@@ -1,0 +1,74 @@
+{% extends 'layout/bases.html' %}
+{% load static %}
+
+{% block content %}
+
+    <h1>Project List</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>User</th>
+                <th>Project Details</th>
+                <th>Total Target</th>
+                <th>Start Time</th>
+                <th>End Time</th>
+                <th>Category</th>
+                <th>Project Show</th>
+                <th>Created At</th>
+                <th>Is Reported</th>
+                <th>Featured</th>
+                <th>Tags</th>
+                <th>Show</th>
+                <th>Image</th>
+                <th>Comments</th>
+                <th>Featured</th> <!-- New column for selecting featured status -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for project in projects %}
+            <tr>
+                <td>{{ project.project_title }}</td>
+                <td>{{ project.user }}</td>
+                <td>{{ project.project_details }}</td>
+                <td>{{ project.total_target }}</td>
+                <td>{{ project.start_time }}</td>
+                <td>{{ project.end_time }}</td>
+                <td>{{ project.category }}</td>
+                <td>{{ project.project_show }}</td>
+                <td>{{ project.created_at }}</td>
+                <td>{{ project.is_reported }}</td>
+                <td>{{ project.featured }}</td>
+                <td>
+                    <ul>
+                        {% for tag in project.tags.all %}
+                        <li><p>{{ tag.tag_name }}</p></li>
+                        {% endfor %}
+                    </ul>
+                </td>
+                <td><a href="{% url 'project_detail' project.id %}" class="btn btn-primary">Show</a></td>
+                <td><a href="{% url "show_image" project.id  %}" class="btn btn-dark">Show Images</a></td>
+                <td><a href="{% url "show_comments" project.id  %}" class="btn btn-dark">Show Comments</a></td>
+                <td>
+                    <form method="post" action="{% url 'toggle_featured' project.id %}">
+                        {% csrf_token %}
+                        {% if project.featured %}
+                            <input type="hidden" name="featured" value="{{ project.id }}">
+                            <button type="submit" class="btn btn-primary">Remove Featured</button>
+                        {% else %}
+                            {% if featured_projects_count < 5 %}
+                                <input type="checkbox" id="featured" name="featured" value="{{ project.id }}">
+                                <label for="featured">Featured</label>
+                                <button type="submit" class="btn btn-primary">Set Featured</button>
+                            {% else %}
+                                <button type="button" class="btn btn-primary" disabled>Set Featured</button>
+                            {% endif %}
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

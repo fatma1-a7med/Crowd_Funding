@@ -3,14 +3,21 @@ from django.db.models import Max
 from projects.models import Project
 from home.forms import ProjectSearchForm
 from categories.models import Category
-from projects.models import Rate,Images
+from projects.models import Rate
 
 def home(request):
     current_user = request.user
-    profile = current_user.profile
-    user_id = current_user.id
-    user_name = current_user.username
-    profile_picture = profile.profile_picture
+    if current_user.is_authenticated:
+        profile = current_user.profile
+        user_id = current_user.id
+        user_name = current_user.username
+        profile_picture = profile.profile_picture
+    else:
+        profile = None
+        user_id = None
+        user_name = None
+        profile_picture = None
+
     form = ProjectSearchForm()
     search_results = []
     category_results = None
@@ -20,9 +27,6 @@ def home(request):
     highest_rated_projects = Rate.objects.values('project_id').annotate(max_rate=Max('rate')).order_by('-max_rate')[:5]
     highest_rated_project_ids = [record['project_id'] for record in highest_rated_projects]
     top_rated_projects = Project.objects.filter(id__in=highest_rated_project_ids)
-
-
-      
 
     query = request.GET.get('query')
     
@@ -50,7 +54,6 @@ def home(request):
             'user_id': user_id,
             'username': user_name,
             'profile_picture': profile_picture,
-            
         }
     }            
-    return render(request, 'home/index.html',context=context)
+    return render(request, 'home/index.html', context=context)

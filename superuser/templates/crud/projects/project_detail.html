@@ -1,0 +1,49 @@
+{% extends 'layout/bases.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-8 offset-md-2">
+            <div class="card">
+                <div class="card-body">
+                    <br />
+                    <ul>
+                        {% for image in data.images_set.all %}
+                        <li>
+                            <img
+                                style="width: 50%; height:250px;"
+                                src="{{ image.img.url }}"
+                            />
+                        </li>
+                        {% endfor %}
+                    </ul>
+                    <br />
+            
+                    <h1>Project Detail</h1>
+                    <h2>{{ project.project_title }}</h2>
+                    <p>{{ project.project_details }}</p>
+                    <p>Total Target: ${{ project.total_target }}</p>
+                    <p>Start Time: {{ project.start_time }}</p>
+                    <p>End Time: {{ project.end_time }}</p>
+                    <p>Category: {{ project.category }}</p>
+                    <p>Project Show: {{ project.project_show }}</p>
+                    <p>Created At: {{ project.created_at }}</p>
+                    <p>Is Reported: {{ project.is_reported }}</p>
+                    <p>Featured: {{ project.featured }}</p>
+                    <p>Tags: 
+                        {% for tag in project.tags.all %}
+                            {{ tag.tag_name }}
+                        {% endfor %}
+                    </p>
+                    <a href="{% url 'update_project' project.id %}" class="btn btn-primary">Update</a>
+                    <form action="{% url 'delete_project' project.id %}" method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

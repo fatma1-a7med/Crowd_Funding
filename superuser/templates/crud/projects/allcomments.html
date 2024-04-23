@@ -1,0 +1,65 @@
+{% extends "layout/bases.html" %}
+{% block title %}
+   project images
+{% endblock %}
+{% block content %}
+
+    <style>
+        .comment-container {
+            margin-top: 20px;
+        }
+        .comment {
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .comment .content {
+            font-size: 16px;
+        }
+        .comment .author {
+            font-size: 14px;
+            color: #666;
+            margin-top: 5px;
+        }
+        .comment .delete-btn {
+            margin-top: 10px;
+            background-color: #f44336;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition-duration: 0.4s;
+        }
+        .comment .delete-btn:hover {
+            background-color: #555;
+        }
+    </style>
+    <h1>All Comments</h1>
+    <a href="{% url 'add_comment' project.id %}" class="btn btn-dark"> Add comment </a>
+
+
+    <div class="comment-container">
+        {% for comment in comments %}
+            <div class="comment">
+                <p class="content">{{ comment.content }}</p>
+                <p class="content">Is reported: {{ comment.is_reported }}</p>
+                <p class="author">Author: {{ comment.user }}</p>
+                <a href="{% url 'all_replies' project.id  %}" class="btn btn-dark">Show Replies</a>
+                <form action="{% url 'delete_comment' comment.id project.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="delete-btn">Delete</button>
+                    
+                </form>
+            </div>
+        {% empty %}
+            <p>No comments available.</p>
+        {% endfor %}
+    </div>
+{% endblock %}

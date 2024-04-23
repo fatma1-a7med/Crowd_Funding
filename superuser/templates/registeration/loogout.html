@@ -1,0 +1,27 @@
+{% extends "layout/bases.html" %}
+{% block title %}
+   log_out
+{% endblock %}
+{% block content %}
+<body class="container bg-primary">
+  <h3 class="text-center text-dark">Logout</h3>
+  <h4 class="text-center text-dark">you can sign in if you wannt</h4>
+  <div class="container mt-5">
+    <h2>Sign in</h2>
+    <form method="post" class="mt-4" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="id_username">Username or Email:</label>
+            <input type="text" class="form-control" id="id_username" name="username" placeholder="superuser"/>
+        </div>
+        <div class="form-group">
+            <label for="id_password">Password:</label>
+            <input type="password" class="form-control" id="id_password" name="password" placeholder="password"/>
+        </div>
+        <button type="submit" class="btn btn-success">Sign in</button>
+    </form>
+
+</div>
+
+
+{% endblock %}

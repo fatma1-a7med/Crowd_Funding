@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'categories.apps.CategoriesConfig',
     'home.apps.HomeConfig',
+    'superuser.apps.SuperuserConfig',
+
     'crispy_forms',
     'taggit',
     'crispy_bootstrap4',
