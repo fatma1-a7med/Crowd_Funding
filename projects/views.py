@@ -119,12 +119,14 @@ def project_details(request, _id):
     if project_data is None:
         return redirect('some_error_page')
 
-    # relatedProjects = Project.objects.all().filter(category_id=project_data.category)
+
     relatedProjects = Project.objects.filter(tags__in=project_data.tags.all()) \
                            .exclude(id=project_data.id) \
                            .annotate(tag_count=Count('tags')) \
                            .order_by('-tag_count')[:4]
+
     print(relatedProjects)
+    print(project_data.id)
 
 
     relatedProjects = Project.objects.all().filter(category_id=project_data.category)
@@ -156,7 +158,7 @@ def project_details(request, _id):
     }
 
 
-    return render(request, "user_projects/sliderpase.html",context)
+    return render(request, "user_projects/projectdata.html",context)
 
 
 def add_comment(request):
