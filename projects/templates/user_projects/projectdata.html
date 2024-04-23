@@ -11,7 +11,7 @@
                         <div class="carousel-inner">
                             {% for image in data.images_set.all %}
                             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                                <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                                <img height="400px" class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
                             </div>
                             {% endfor %}
                         </div>
@@ -33,11 +33,11 @@
                         <strong>End date:</strong> {{ data.end_time }} <br>
                         <strong>Target:</strong> {{ data.total_target }}
                     </p>
-                  
+
                     <tr>
                         <td colspan="2"><strong>Project Category:</strong></td>
                     </tr>
-                 
+
                     <tr>
                         <td colspan="2">
                             <li>{{category.name}}</li>
@@ -55,21 +55,22 @@
 
 
 
-                        
-                        <form action="/projects/donation/add" method="post">
-                            {% csrf_token %}
-                            <label for="">Donation for the project</label>
-                            <input type="hidden" name="id" value="{{ data.id }}">
-                            <input type="hidden" name="user_id" value="1">
-                            <input type="number" min="1" name="amount" class="form-control">
-                            <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
-                                Send Donate
-                            </button>
-                        </form>
+
+                   <form action="/projects/donation/add" method="post" onsubmit="return validateDonation()">
+    {% csrf_token %}
+    <label for="">Donation for the project</label>
+    <input type="hidden" name="id" value="{{ data.id }}">
+    <input type="hidden" name="user_id" value="1">
+    <input type="number" min="1" name="amount" id="donationAmount" class="form-control">
+    <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
+        Send Donate
+    </button>
+</form>
+
                         <p class="card-text" style="margin-left:460px;margin-top:-30px">
                             <strong>Total Donations:</strong> {{ total_donate.amount__sum }} LE
                         </p> <br>
-                        
+
                         <form action="/projects/rate" method="post">
                             {% csrf_token %}
                             <label for="rate">Rate this project</label>
@@ -136,7 +137,7 @@
                     <button type="submit" class="btn sign_up mx-3">Add Comment</button>
                 </form>
                 <br>
-               
+
 
             </div>
             {% if data.total_target|sub:total_donate.amount__sum > data.total_target|div:4 %}
@@ -166,12 +167,12 @@
     {% if forloop.counter < 5 %}
     {% if data.id != project.data.id %}
     <div class="col-md-3 mt-5">
-        <div class="card cardDes">
-            <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel">
+        <div class="card cardDes" style="height: 550px;">
+            <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel" style="height: 300px;">
                 <div class="carousel-inner">
                     {% for image in data.images_set.all %}
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        <img class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
+                        <img height="300px" class="d-block w-100" src="{{ image.img.url }}" alt="Project Image">
                     </div>
                     {% endfor %}
                 </div>
@@ -226,8 +227,73 @@ document.getElementById('delete-btn').addEventListener('click', function() {
     });
 });
 
+
+    function validateDonation() {
+        var totalDonations = {{ total_donate.amount__sum }};
+        var targetAmount = {{ data.total_target }};
+        var donationAmount = parseInt(document.getElementById("donationAmount").value);
+
+        if (donationAmount <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Donation amount must be greater than 0.'
+            });
+            return false;
+        }
+
+        if (totalDonations + donationAmount > targetAmount) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Donation amount exceeds total target amount.'
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+
 </script>
+
+
 {% endblock %}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

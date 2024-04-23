@@ -1,10 +1,8 @@
-b{% extends "layout/bases.html" %}
+{% extends "layouts/base.html" %}
 {% load static %}
 {% block title %} Categories {% endblock %}
 
 {% block content %}
-<h1> All Categories </h1>
-
 <style>
     .table {
         width: 100%;
@@ -30,12 +28,11 @@ b{% extends "layout/bases.html" %}
         border-radius: 4px;
         text-decoration: none;
     }
-    .btn-info:hover {
-        background-color: #007bff; /* Darker blue background on hover */
-    }
+   
 </style>
 <h1 style="text-align: center;">All Categories</h1>
-{% comment %} <button href='{% url "category_create" %}' class="brn btn-dark"> Create category </button> {% endcomment %}
+{% comment %} <button href="{{category.create_url}}" class="brn btn-primary"> Create category </button> {% endcomment %}
+<td><a href="{% url 'category_create' %}" class="btn btn-primary">Create Category</a></td>
 <table class="table">
     <tr>
         <th>Id</th>
@@ -48,9 +45,11 @@ b{% extends "layout/bases.html" %}
     <tr>
         <td>{{ category.id }}</td>
         <td>{{ category.name }}</td>
+
+        {% comment %} "{% url 'category_show' %}" {% endcomment %}
         <td><a href="{{ category.show_url }}" class="btn btn-info">Show</a></td>
-        {% comment %} <td><a class="btn btn-warning" href="{{category.edit_url}}">Edit</a></td> {% endcomment %}
-        {% comment %} <td><a class="btn btn-danger" href="{{category.delete_url}}">Delete</a></td> {% endcomment %}
+        <td><a class="btn btn-warning" href="{{category.edit_url}}">Edit</a></td>
+        <td><a class="btn btn-danger" href="{{category.delete_url}}">Delete</a></td>
         {% comment %} <td>
             <a class="btn btn-info" href="{{category.show_url}}">Show</a>
         </td> {% endcomment %}

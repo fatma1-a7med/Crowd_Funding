@@ -9,12 +9,12 @@
         margin-top: 20px;
     }
     .table th, .table td {
-        border: 1px solid #ddd;
+        border: 1px solid #aaaaaa;
         padding: 8px;
         text-align: left;
     }
     .table th {
-        background-color: #e6f7ff; /* Light blue background */
+        background-color: #ddd; /* Light blue background */
     }
     .table img {
         max-width: 200px;
@@ -33,7 +33,7 @@
 </style>
 
 
-    <h1>Project List</h1>
+    <h2 class="my-3" style="color: #4F4557;">Project List</h2>
 
     <table class="table">
         <thead>
@@ -46,14 +46,13 @@
                 <th>End Time</th>
                 <th>Category</th>
                 <th>Project Show</th>
-                <th>Created At</th>
                 <th>Is Reported</th>
                 <th>Featured</th>
                 <th>Tags</th>
                 <th>Show</th>
                 <th>Image</th>
                 <th>Comments</th>
-                <th>Featured</th> <!-- New column for selecting featured status -->
+                <th>Featured</th>
             </tr>
         </thead>
         <tbody>
@@ -67,7 +66,6 @@
                 <td>{{ project.end_time }}</td>
                 <td>{{ project.category }}</td>
                 <td>{{ project.project_show }}</td>
-                <td>{{ project.created_at }}</td>
                 <td>{{ project.is_reported }}</td>
                 <td>{{ project.featured }}</td>
                 <td>
@@ -78,8 +76,8 @@
                     </ul>
                 </td>
                 <td><a href="{% url 'project_detail' project.id %}" class="btn btn-primary">Show</a></td>
-                <td><a href="{% url "show_image" project.id  %}" class="btn btn-dark">Show Images</a></td>
-                <td><a href="{% url "show_comments" project.id  %}" class="btn btn-dark">Show Comments</a></td>
+                <td><a href="{% url "show_image" project.id  %}" class="btn text-light" style="background-color: #4F4557; ">Images</a></td>
+                <td><a href="{% url "show_comments" project.id  %}" class="btn text-light" style="background-color: #4F4557; ">Comments</a></td>
                 <td>
                     <form method="post" action="{% url 'toggle_featured' project.id %}">
                         {% csrf_token %}

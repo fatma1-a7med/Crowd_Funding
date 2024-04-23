@@ -2,6 +2,8 @@
 from django.urls import path,include
 from superuser.views import *
 from django.contrib import admin
+from superuser.views import category_create,category_delete,category_show
+
 
 
 urlpatterns = [
@@ -39,14 +41,10 @@ urlpatterns = [
    
    
  ## category ##
- path('category/create/',category_create,name='create_category'),
+ path('category/create/',category_create,name='category_create'),
  path('category/allcategory',categories_index,name='categories_index'),
- path('category/show/<int:id>', category_show, name='category_show'),
+ path('category/show/<int:id>', category_show, name='categories.show'),
  path('category/<int:id>/edit', category_edit, name='category_edit'),  
  path('category<int:id>/delete',category_delete,name='category_delete'),
-
-
-
-
 
 ]
