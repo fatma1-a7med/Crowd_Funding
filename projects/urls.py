@@ -6,6 +6,7 @@ from projects.views import project_edit,project_delete,project_show
 
 
 
+
 urlpatterns =[
     path('',views.perojects_index,name='projects.index'),
     path('add', views.add_project, name='createProject'),

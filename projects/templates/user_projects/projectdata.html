@@ -15,16 +15,17 @@
                             </div>
                             {% endfor %}
                         </div>
-                        <a class="carousel-control-prev" href="#carouselExampleControls" role="button"
-                           data-slide="prev">
-                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Previous</span>
-                        </a>
-                        <a class="carousel-control-next" href="#carouselExampleControls" role="button"
-                           data-slide="next">
-                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                            <span class="sr-only">Next</span>
-                        </a>
+
+                  <a class="carousel-control-prev" href="#carouselExampleControls{{ forloop.counter }}" role="button"
+                   data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleControls{{ forloop.counter }}" role="button"
+                   data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
                     </div>
                     <h3 class="card-title">{{ data.project_title }}</h3>
                     <p class="card-text">{{ data.project_details }}</p>
@@ -56,19 +57,22 @@
                         <br/>
 
 
-                        <p class="card-text">
-                            <strong>Total Donations:</strong> {{ total_donate.amount__sum }} LE
-                        </p>
-                        <form action="/projects/donation/add" method="post">
-                            {% csrf_token %}
-                            <label for="">Donation for the project</label>
-                            <input type="hidden" name="id" value="{{ data.id }}">
-                            <input type="hidden" name="user_id" value="1">
-                            <input type="number" min="1" name="amount" class="form-control">
-                            <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
-                                Send Donate
-                            </button>
-                        </form>
+                  <p class="card-text">
+                      <strong>Total Donations:</strong> {{ total_donate.amount__sum }} LE
+                    </p>
+                <form action="/projects/donation/add" method="post" onsubmit="return validateDonation()">
+                    {% csrf_token %}
+                    <label for="">Donation for the project</label>
+                    <input type="hidden" name="id" value="{{ data.id }}">
+                    <input type="hidden" name="user_id" value="{{ request.user.id }}">
+                    <input type="number" min="1" id="donationAmount" name="amount" class="form-control">
+                    <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
+                        Send Donate
+                    </button>
+                </form>
+
+
+
                         <div class="row m-4">
                             {% load mathfilters %}
                             <h3>Project Rates: {{ rate_sum.rate__sum|div:rate_count.rate__count|mul:10 }}%</h3>
@@ -78,7 +82,7 @@
                             <label for="rate">Rate this project</label>
                             <input type="hidden" name="id" value="{{ data.id }}">
                             <input type="hidden" name="user_id" value="1">
-                            <input type="number" min="0" name="rate" max="10" class="form-control">
+                            <input type="number" min="0" name="rate" max="5" class="form-control">
                             <button type="submit" class="btn btn-primary mt-4" style="background: #00e2ba; border:none">
                                 Rate
                             </button>
@@ -99,6 +103,12 @@
                 {% for reply in comment.replies.all %}
                     <div class="card my-3 ml-4">
                         <div class="card-body">
+
+                {% if reply.user.profile.profile_picture %}
+                    <img id="profile_picture" src="{{ reply.user.profile.profile_picture.url }}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+                {% else %}
+                    <img id="profile_picture" src="{% static 'user_projects/images/profile1.jpg' %}" class="rounded-circle" style="width:50px ;hieght:50px"/>
+                {% endif %}
                             <h5 class="card-title">{{ reply.user.first_name}} {{reply.user.last_name}}</h5>
                             <p class="card-text">{{ reply.content }}</p>
                         </div>
@@ -161,7 +171,7 @@
 <div class="row">
     {% for data in relatedProjects %}
     {% if forloop.counter < 5 %}
-    {% if data.id != project.data.id %}
+     {% if data.id != project_data.id %}
     <div class="col-md-3 mt-5">
         <div class="card cardDes">
             <div id="carouselExampleControls{{ forloop.counter }}" class="carousel slide" data-ride="carousel">
@@ -193,7 +203,7 @@
                     <li>{{ tag.tag_name }}</li>
                     {% endfor %}
                 </ul>
-
+            <a href="{% url 'projectDetails'  data.id %}" class="btn"style="background-color: #4F4557;color:white ">More Details</a>
             </div>
         </div>
     </div>
@@ -223,7 +233,40 @@ document.getElementById('delete-btn').addEventListener('click', function() {
     });
 });
 
+
+  function validateDonation() {
+        var totalDonations = {{ total_donate.amount__sum }};
+        var targetAmount = {{ data.total_target }};
+        var donationAmount = parseInt(document.getElementById("donationAmount").value);
+
+        if (donationAmount <= 0) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Donation amount must be greater than 0.'
+            });
+            return false;
+        }
+
+        if (totalDonations + donationAmount > targetAmount) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Donation amount exceeds total target amount.'
+            });
+            return false;
+        }
+
+        return true;
+    }
+
+
+
+
 </script>
+
+
+
 {% endblock %}
 
 
