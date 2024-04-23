@@ -363,7 +363,20 @@ def user_donations(request, user_id):
 
 
 def some_error_page(request):
-    return render(request, 'error_page.html')
+    current_user = request.user
+    profile = current_user.profile
+    user_id = current_user.id
+    user_name = current_user.username
+    profile_picture = profile.profile_picture
+    context = {
+        'userData': {
+            'user_id': user_id,
+            'username': user_name,
+            'profile_picture': profile_picture,
+            
+        }
+    }
+    return render(request, 'error_page.html',context)
 
 
 

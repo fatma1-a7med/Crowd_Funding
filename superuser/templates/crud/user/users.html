@@ -28,7 +28,6 @@
                 <td>{{ profile.facebook_profile }}</td>
                 <td>{{ profile.country }}</td>
                 <td>
-                    <a href="{% url 'user_update' profile.user.id %}" class="btn btn-primary">Update</a>
                     <a href="{% url 'user_delete' profile.user.id %}" class="btn btn-danger">Delete</a>
                 </td>
             </tr>

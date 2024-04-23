@@ -1,11 +1,12 @@
 {%extends "layouts/base.html"%}{% block title %}Add Project{% endblock %}
 {%block content %}
-
-
+      <div class="container">
+       <h2 class="my-3" style="color:#4F4557">Add new project </h2>
         <form
             action="/projects/save"
             method="post"
-            enctype="multipart/form-data"
+            enctype="multipart/form-data" 
+  
         >
             {% csrf_token %}
             <div class="form-group">
@@ -143,4 +144,6 @@
         </form>
     </div>
 </div>
+</div>
+
 {% endblock %}

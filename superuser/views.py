@@ -27,7 +27,7 @@ def superuser_login(request):
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_superuser:
             login(request, user)
-            return redirect('index')
+            return redirect('index.superuser')
         else:
             print ('login is required')
             pass
@@ -200,9 +200,9 @@ def toggle_featured(request, project_id):
         project = get_object_or_404(Project, id=project_id)
         project.featured = not project.featured
         project.save()
-        return redirect('index')
+        return redirect('index.superuser')
     else:
-        return redirect('index')
+        return redirect('index.superuser')
     
     
   
