@@ -1,4 +1,4 @@
-{% extends "layouts/base.html" %}
+{% extends 'layout/bases.html' %}
 {% load static %}
 {% block title %} Categories {% endblock %}
 
@@ -14,9 +14,7 @@
         padding: 8px;
         text-align: left;
     }
-    .table th {
-        background-color: #e6f7ff; /* Light blue background */
-    }
+
     .table img {
         max-width: 200px;
         max-height: 200px;
@@ -30,9 +28,11 @@
     }
    
 </style>
-<h1 style="text-align: center;">All Categories</h1>
+<div class="d-flex justify-content-between my-3">
+<h2 class="" style="color: #4F4557;">All Categories</h2>
 {% comment %} <button href="{{category.create_url}}" class="brn btn-primary"> Create category </button> {% endcomment %}
-<td><a href="{% url 'category_create' %}" class="btn btn-primary">Create Category</a></td>
+<a href="{% url 'category_create' %}" class="btn" style="background-color:#4F4557;color:white">Create Category</a>
+</div>
 <table class="table">
     <tr>
         <th>Id</th>
